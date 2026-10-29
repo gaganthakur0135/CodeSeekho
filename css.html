@@ -1,0 +1,628 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Tutorial | CodeSeekho</title>
+
+<style>
+:root {
+  --bg: #030b20;
+  --panel: #0b1730;
+  --panel2: #101f3d;
+  --text: #e8f1ff;
+  --muted: #a9bad3;
+  --accent: #00e8c0;
+  --border: #203655;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 22px;
+  background: #071329;
+  border-bottom: 1px solid var(--border);
+}
+.logo { color: var(--accent); font-size: 23px; font-weight: bold; }
+header a { color: var(--text); text-decoration: none; }
+header a:hover { color: var(--accent); }
+.layout { display: flex; min-height: calc(100vh - 60px); }
+
+aside {
+  width: 270px;
+  flex-shrink: 0;
+  padding: 20px 12px;
+  background: #071329;
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  align-self: flex-start;
+  overflow-y: auto;
+}
+
+aside h3 { color: var(--accent); padding-left: 10px; }
+
+#lessonList {
+  max-height: none;
+  overflow-y: visible;
+}
+
+#lessonList a {
+  display: block;
+  padding: 10px;
+  margin: 3px 0;
+  border-radius: 7px;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 14px;
+}
+#lessonList a:hover, #lessonList a.active {
+  background: #12304a;
+  color: var(--accent);
+}
+main {
+  width: 100%;
+  max-width: 1100px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 25px;
+}
+h1 { font-size: 32px; margin-top: 5px; }
+h2 { color: var(--accent); margin-top: 0; }
+p, li { line-height: 1.8; }
+.muted { color: var(--muted); }
+.progress-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 14px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+.progress-track {
+  height: 8px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #22344e;
+  margin-top: 10px;
+}
+#progressFill {
+  height: 100%;
+  width: 2%;
+  background: var(--accent);
+  transition: width .2s;
+}
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  margin: 20px 0;
+}
+.note {
+  border-left: 4px solid var(--accent);
+  background: #10253b;
+  padding: 12px 15px;
+  border-radius: 5px;
+  line-height: 1.7;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #020817;
+  color: #a8f7e7;
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: 8px;
+  line-height: 1.6;
+  overflow-x: auto;
+}
+button {
+  border: 0;
+  border-radius: 7px;
+  padding: 11px 17px;
+  cursor: pointer;
+  font-weight: bold;
+  background: var(--accent);
+  color: #031421;
+}
+button:hover { opacity: .85; }
+button.secondary {
+  background: #00e8c0;
+  color: #031421;
+  border: 1px solid #00e8c0;
+}
+button:disabled { opacity: .4; cursor: not-allowed; }
+#editor {
+  width: 100%;
+  min-height: 210px;
+  resize: vertical;
+  background: #020817;
+  color: #b6ffe9;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 15px;
+  font: 14px/1.7 Consolas, monospace;
+}
+.editor-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+#preview {
+  width: 100%;
+  height: 300px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.lesson-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 25px 0;
+}
+.lesson-nav button { min-width: 115px; }
+footer {
+  text-align: center;
+  padding: 25px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+@media(max-width:750px) {
+  header { padding: 13px; }
+  .layout { display: block; }
+  aside { width: 100%; border-right: 0; border-bottom: 1px solid var(--border); }
+  #lessonList { max-height: 230px; }
+  main { padding: 16px; }
+  h1 { font-size: 27px; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="logo">CodeSeekho</div>
+  <a href="index.html">← Back to Home</a>
+</header>
+
+<div class="layout">
+  <aside>
+    <h3>CSS Tutorial</h3>
+    <div id="lessonList"></div>
+  </aside>
+
+  <main>
+    <h1>CSS Tutorial</h1>
+    <p class="muted">Learn CSS step by step with simple explanations, examples and practice.</p>
+
+    <div class="progress-box">
+      <strong id="lessonCounter">Lesson 1 of 50</strong>
+      <div class="progress-track">
+        <div id="progressFill"></div>
+      </div>
+    </div>
+
+    <section class="panel">
+      <h2 id="lessonTitle">Introduction to CSS</h2>
+      <div id="lessonContent"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Example Code</h2>
+      <p>Edit the CSS below and click Run Code to see the result.</p>
+      <textarea id="editor" spellcheck="false"></textarea>
+      <div class="editor-actions">
+        <button onclick="runCode()">Run Code ▶</button>
+        <button class="secondary" onclick="resetCode()">Reset Code</button>
+      </div>
+      <h3>Live Preview</h3>
+      <iframe id="preview" title="CSS live preview" sandbox=""></iframe>
+    </section>
+
+    <div class="lesson-nav">
+      <button class="secondary" id="backBtn" onclick="changeLesson(-1)">← Back</button>
+      <button id="nextBtn" onclick="changeLesson(1)">Next →</button>
+    </div>
+
+    <footer>© CodeSeekho | Learn Coding for Free</footer>
+  </main>
+</div>
+
+<script>
+const lessons = [
+{
+title:"Introduction to CSS",
+desc:"CSS stands for Cascading Style Sheets. It controls the appearance of HTML pages, including colors, fonts, spacing and layout. HTML creates the structure, while CSS styles it.",
+code:"h1 {\n  color: teal;\n}\np {\n  font-size: 18px;\n}"
+},
+{
+title:"CSS Syntax",
+desc:"A CSS rule contains a selector and a declaration block. Each declaration has a property and a value. The property tells CSS what to change, and the value tells it how.",
+code:"h1 {\n  color: blue;\n  font-size: 32px;\n}"
+},
+{
+title:"Ways to Add CSS",
+desc:"CSS can be added in three ways: inline CSS inside an HTML style attribute, internal CSS inside a style element, and external CSS in a separate .css file. External CSS is useful for larger websites.",
+code:"h1 {\n  color: purple;\n}\np {\n  color: #333333;\n}"
+},
+{
+title:"CSS Selectors",
+desc:"Selectors choose which HTML elements will receive styles. Common selectors include element selectors, class selectors, ID selectors and universal selectors.",
+code:"h1 {\n  color: teal;\n}\np {\n  color: #345;\n}"
+},
+{
+title:"Element Selector",
+desc:"An element selector selects every HTML element with the specified tag name. For example, p selects all paragraphs on the page.",
+code:"p {\n  color: darkblue;\n  font-size: 18px;\n}"
+},
+{
+title:"Class Selector",
+desc:"A class selector begins with a dot. It styles elements that have the matching class attribute. The same class can be used on multiple elements.",
+code:".highlight {\n  color: #00796b;\n  background-color: #d5fff5;\n  padding: 8px;\n}"
+},
+{
+title:"ID Selector",
+desc:"An ID selector begins with # and targets an element with the matching id. IDs should be unique on a page. Use classes when the same style is needed repeatedly.",
+code:"#demo {\n  color: crimson;\n  font-weight: bold;\n}"
+},
+{
+title:"Universal Selector",
+desc:"The universal selector (*) matches all elements. It is often used for basic resets such as removing default margins and making element sizing easier to manage.",
+code:"* {\n  box-sizing: border-box;\n}\nbody {\n  margin: 0;\n}"
+},
+{
+title:"Grouping Selectors",
+desc:"Grouping lets you apply the same declarations to multiple selectors. Separate the selectors with commas to avoid repeating the same CSS rule.",
+code:"h1, h2, p {\n  font-family: Arial, sans-serif;\n  color: #17405e;\n}"
+},
+{
+title:"CSS Comments",
+desc:"Comments help explain your code. Write them between /* and */. Browsers ignore comments when applying styles.",
+code:"/* Main heading style */\nh1 {\n  color: teal;\n}\n/* Paragraph style */\np {\n  line-height: 1.7;\n}"
+},
+{
+title:"Colors in CSS",
+desc:"CSS supports named colors, hexadecimal colors, RGB and HSL values. Choose colors that have enough contrast to keep text easy to read.",
+code:"h1 {\n  color: #008f83;\n}\np {\n  color: rgb(40, 60, 80);\n}\nbody {\n  background-color: #f0fffc;\n}"
+},
+{
+title:"Background Properties",
+desc:"Background properties control an element's background color and image. Background images can be repeated, positioned and sized.",
+code:"body {\n  background-color: #e8f8ff;\n}\n.card {\n  background-color: white;\n  padding: 20px;\n}"
+},
+{
+title:"Background Images",
+desc:"The background-image property displays an image behind an element's content. Use background-size: cover when you want an image to cover the whole area.",
+code:".hero {\n  background-image: linear-gradient(#0005, #0005), url('photo.jpg');\n  background-size: cover;\n  background-position: center;\n}"
+},
+{
+title:"Borders",
+desc:"Borders appear around an element. You can set their width, style and color. Common border styles include solid, dashed and dotted.",
+code:".card {\n  border: 2px solid teal;\n  padding: 15px;\n}"
+},
+{
+title:"Border Radius",
+desc:"The border-radius property rounds the corners of an element. A large radius can create pill-shaped buttons, while 50% can make a square element circular.",
+code:".card {\n  border: 2px solid teal;\n  border-radius: 12px;\n  padding: 15px;\n}"
+},
+{
+title:"CSS Margins",
+desc:"Margin creates space outside an element's border. You can set individual sides or use a shorthand value for all sides.",
+code:".card {\n  margin: 20px;\n}\nh1 {\n  margin-bottom: 15px;\n}"
+},
+{
+title:"CSS Padding",
+desc:"Padding creates space between an element's content and its border. Unlike margin, padding is inside the border.",
+code:".card {\n  padding: 20px;\n  background-color: #e1fff8;\n}"
+},
+{
+title:"Height and Width",
+desc:"The width and height properties set an element's dimensions. Max-width is useful for making content fit smaller screens.",
+code:".card {\n  width: 80%;\n  max-width: 500px;\n  min-height: 100px;\n}"
+},
+{
+title:"CSS Box Model",
+desc:"The box model consists of content, padding, border and margin. Using box-sizing: border-box makes declared width and height include padding and borders.",
+code:"* {\n  box-sizing: border-box;\n}\n.card {\n  width: 250px;\n  padding: 20px;\n  border: 2px solid teal;\n}"
+},
+{
+title:"Text Styling",
+desc:"CSS text properties control alignment, decoration, transformation and spacing. These properties help make text clearer and more consistent.",
+code:"h1 {\n  text-align: center;\n  text-decoration: underline;\n}\np {\n  line-height: 1.8;\n  letter-spacing: 0.3px;\n}"
+},
+{
+title:"CSS Fonts",
+desc:"Font properties control the typeface, size, weight and style of text. Always provide a fallback font in case the preferred font is unavailable.",
+code:"body {\n  font-family: Arial, sans-serif;\n  font-size: 16px;\n}\nh1 {\n  font-weight: 700;\n  font-style: normal;\n}"
+},
+{
+title:"Font Size and Weight",
+desc:"Font-size changes text size, while font-weight controls how thick the characters appear. Common weights include normal (400) and bold (700).",
+code:"h1 {\n  font-size: 2rem;\n  font-weight: 700;\n}\np {\n  font-size: 1rem;\n}"
+},
+{
+title:"CSS Links",
+desc:"Links can have different styles for normal, visited, hover and active states. A visible hover effect helps visitors understand that a link is interactive.",
+code:"a {\n  color: #00796b;\n  text-decoration: none;\n}\na:hover {\n  text-decoration: underline;\n}"
+},
+{
+title:"CSS Lists",
+desc:"List properties control bullet styles, numbering and the position of markers. You can remove default bullets to create custom navigation lists.",
+code:"ul {\n  list-style-type: square;\n  padding-left: 25px;\n}\nli {\n  margin-bottom: 8px;\n}"
+},
+{
+title:"CSS Tables",
+desc:"Table styling makes tabular information easier to read. Border-collapse combines adjacent borders, while padding gives text room inside each cell.",
+code:"table {\n  width: 100%;\n  border-collapse: collapse;\n}\nth, td {\n  border: 1px solid #999;\n  padding: 10px;\n}\nth {\n  background: #d5fff5;\n}"
+},
+{
+title:"CSS Display",
+desc:"The display property changes how an element participates in layout. Common values include block, inline, inline-block, flex, grid and none.",
+code:".item {\n  display: inline-block;\n  padding: 12px;\n  background: #d5fff5;\n}"
+},
+{
+title:"CSS Visibility",
+desc:"Visibility controls whether an element is visible. visibility: hidden hides it but preserves its layout space. display: none removes its layout space.",
+code:".hidden-item {\n  visibility: hidden;\n}\n.removed-item {\n  display: none;\n}"
+},
+{
+title:"CSS Position",
+desc:"Positioning controls how an element is placed. Common values are static, relative, absolute, fixed and sticky. Positioned elements can use top, right, bottom and left.",
+code:".card {\n  position: relative;\n  top: 5px;\n  left: 10px;\n}"
+},
+{
+title:"CSS Z-Index",
+desc:"The z-index property controls stacking order for overlapping elements. Its effect depends on positioning and stacking contexts.",
+code:".box-one {\n  position: relative;\n  z-index: 2;\n}\n.box-two {\n  position: relative;\n  z-index: 1;\n}"
+},
+{
+title:"CSS Overflow",
+desc:"Overflow controls what happens when content is larger than its container. Values include visible, hidden, scroll and auto.",
+code:".box {\n  width: 220px;\n  height: 100px;\n  overflow: auto;\n  border: 1px solid teal;\n}"
+},
+{
+title:"CSS Float and Clear",
+desc:"Float can place an element to the left or right so text wraps around it. Clear prevents an element from sitting beside floated elements. Modern layouts usually use Flexbox or Grid.",
+code:".photo {\n  float: left;\n  margin: 0 15px 10px 0;\n}\n.footer {\n  clear: both;\n}"
+},
+{
+title:"Flexbox Introduction",
+desc:"Flexbox is a one-dimensional layout system for arranging items in a row or column. Apply display: flex to a parent container to control its children.",
+code:".container {\n  display: flex;\n  gap: 12px;\n  background: #edf8ff;\n  padding: 12px;\n}\n.item {\n  padding: 15px;\n  background: #bdf7eb;\n}"
+},
+{
+title:"Flex Direction",
+desc:"The flex-direction property sets the main axis. Use row for a horizontal layout and column for a vertical layout.",
+code:".container {\n  display: flex;\n  flex-direction: row;\n  gap: 10px;\n}"
+},
+{
+title:"Justify Content",
+desc:"justify-content distributes items along the main axis of a flex container. Common values include flex-start, center, space-between and space-around.",
+code:".container {\n  display: flex;\n  justify-content: space-between;\n  gap: 10px;\n}"
+},
+{
+title:"Align Items",
+desc:"align-items aligns flex items along the cross axis. Common values include stretch, center, flex-start and flex-end.",
+code:".container {\n  display: flex;\n  align-items: center;\n  min-height: 140px;\n  gap: 10px;\n}"
+},
+{
+title:"CSS Grid",
+desc:"CSS Grid is a two-dimensional layout system that controls rows and columns. It is useful for galleries, dashboards and page layouts.",
+code:".container {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 12px;\n}\n.item {\n  padding: 15px;\n  background: #d5fff5;\n}"
+},
+{
+title:"Grid Rows and Columns",
+desc:"Grid-template-columns defines column sizes, while grid-template-rows defines row sizes. The fr unit distributes available space between tracks.",
+code:".container {\n  display: grid;\n  grid-template-columns: 2fr 1fr;\n  grid-template-rows: 80px 120px;\n  gap: 10px;\n}"
+},
+{
+title:"CSS Gap",
+desc:"The gap property sets the space between items in Flexbox and Grid layouts. It can be used instead of adding margins to every child.",
+code:".container {\n  display: flex;\n  gap: 20px;\n}\n.item {\n  padding: 12px;\n  background: #d5fff5;\n}"
+},
+{
+title:"CSS Units",
+desc:"CSS units include px, %, em, rem, vw and vh. Pixels are fixed units, percentages depend on a containing size, and rem is based on the root font size.",
+code:".card {\n  width: 80%;\n  padding: 1rem;\n  font-size: 1rem;\n}\n.hero {\n  min-height: 50vh;\n}"
+},
+{
+title:"Pseudo-Classes",
+desc:"Pseudo-classes style elements in a particular state. Examples include :hover, :focus, :first-child and :checked.",
+code:"button:hover {\n  background: #00695c;\n  color: white;\n}\ninput:focus {\n  outline: 2px solid teal;\n}"
+},
+{
+title:"Pseudo-Elements",
+desc:"Pseudo-elements style a specific part of an element. Common examples are ::before, ::after and ::first-letter.",
+code:"p::first-letter {\n  font-size: 2rem;\n  color: teal;\n}\nh2::after {\n  content: ' ✦';\n  color: teal;\n}"
+},
+{
+title:"CSS Transitions",
+desc:"Transitions make changes in CSS properties happen gradually. Define the property and duration, then change the style during a state such as hover.",
+code:"button {\n  background: teal;\n  color: white;\n  transition: background 0.3s ease;\n}\nbutton:hover {\n  background: navy;\n}"
+},
+{
+title:"CSS Transforms",
+desc:"Transforms can move, rotate, scale or skew an element without changing the normal document flow around it.",
+code:".card:hover {\n  transform: translateY(-5px) scale(1.02);\n}\n.card {\n  transition: transform 0.2s;\n}"
+},
+{
+title:"CSS Animations",
+desc:"CSS animations use @keyframes to define stages of an animation. The animation property controls its name, duration and repetition.",
+code:"@keyframes moveUp {\n  from { transform: translateY(10px); }\n  to { transform: translateY(0); }\n}\n.card {\n  animation: moveUp 0.8s ease;\n}"
+},
+{
+title:"CSS Shadows",
+desc:"box-shadow adds a shadow around an element. text-shadow adds a shadow behind text. Use subtle shadows to improve depth without reducing readability.",
+code:".card {\n  box-shadow: 0 6px 18px #0002;\n}\nh1 {\n  text-shadow: 1px 2px 3px #999;\n}"
+},
+{
+title:"CSS Opacity",
+desc:"Opacity controls how transparent an element is, from 0 (fully transparent) to 1 (fully opaque). It affects the element and its contents.",
+code:".card {\n  opacity: 0.8;\n}\n.card:hover {\n  opacity: 1;\n}"
+},
+{
+title:"CSS Variables",
+desc:"CSS custom properties store reusable values. Define them with --names, commonly in :root, and use them with var(). This makes theme changes easier.",
+code:":root {\n  --main-color: #008f83;\n  --space: 16px;\n}\nh1 {\n  color: var(--main-color);\n}\n.card {\n  padding: var(--space);\n}"
+},
+{
+title:"Responsive Design",
+desc:"Responsive design adapts a website to different screen sizes. Flexible widths, responsive images and media queries help pages work on phones, tablets and desktops.",
+code:"img {\n  max-width: 100%;\n  height: auto;\n}\n.container {\n  width: 90%;\n  max-width: 1100px;\n  margin: auto;\n}"
+},
+{
+title:"Media Queries",
+desc:"Media queries apply CSS only when a condition is true, such as a maximum viewport width. They are commonly used to change layouts for mobile screens.",
+code:".container {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 12px;\n}\n@media (max-width: 600px) {\n  .container {\n    grid-template-columns: 1fr;\n  }\n}"
+},
+{
+title:"CSS Filters",
+desc:"The filter property applies visual effects such as grayscale, blur and brightness to images or other elements. Use these effects carefully to keep content clear.",
+code:".photo {\n  filter: grayscale(100%);\n  transition: filter 0.3s;\n}\n.photo:hover {\n  filter: grayscale(0%);\n}"
+},
+{
+title:"CSS Object Fit",
+desc:"object-fit controls how an image or video fits inside its box. cover fills the box while cropping if necessary; contain shows the full image and may leave empty space.",
+code:"img {\n  width: 240px;\n  height: 150px;\n  object-fit: cover;\n  border-radius: 10px;\n}"
+},
+{
+title:"CSS Best Practices",
+desc:"Keep CSS organized, use meaningful class names, reuse variables and avoid unnecessary repetition. Test pages at different screen sizes and make sure text has sufficient contrast.",
+code:":root {\n  --brand: #00796b;\n}\n.card {\n  padding: 1rem;\n  border-radius: 10px;\n  border: 1px solid #ddd;\n}\n.card h2 {\n  color: var(--brand);\n}"
+}
+];
+
+const sampleHTML = `
+<div class="demo">
+  <h1>Welcome to CSS!</h1>
+  <p>This is a sample paragraph. Change the CSS code to style this page.</p>
+  <div class="card">
+    <h2>My First Card</h2>
+    <p>CSS makes websites beautiful and easy to read.</p>
+    <button>Click Me</button>
+  </div>
+  <p><a href="#example">Learn more about CSS</a></p>
+  <ul><li>Simple design</li><li>Clear layout</li><li>Responsive pages</li></ul>
+</div>`;
+
+let currentLesson = 0;
+let originalCode = "";
+
+const lessonList = document.getElementById("lessonList");
+const editor = document.getElementById("editor");
+
+lessons.forEach((lesson, index) => {
+  const link = document.createElement("a");
+  link.href = "#lesson";
+  link.textContent = `${index + 1}. ${lesson.title}`;
+  link.addEventListener("click", event => {
+    event.preventDefault();
+    showLesson(index);
+  });
+  lessonList.appendChild(link);
+});
+
+function showLesson(index) {
+  if (index < 0 || index >= lessons.length) return;
+
+  currentLesson = index;
+  const lesson = lessons[index];
+
+  document.getElementById("lessonTitle").textContent = lesson.title;
+  document.getElementById("lessonContent").innerHTML = "";
+
+  const paragraph = document.createElement("p");
+  paragraph.textContent = lesson.desc;
+  document.getElementById("lessonContent").appendChild(paragraph);
+
+  const note = document.createElement("div");
+  note.className = "note";
+  note.textContent = "Try changing the example CSS and click Run Code to see what happens.";
+  document.getElementById("lessonContent").appendChild(note);
+
+  const codeLabel = document.createElement("p");
+  codeLabel.textContent = "Example:";
+  document.getElementById("lessonContent").appendChild(codeLabel);
+
+  const codeBlock = document.createElement("pre");
+  codeBlock.textContent = lesson.code;
+  document.getElementById("lessonContent").appendChild(codeBlock);
+
+  editor.value = lesson.code;
+  originalCode = lesson.code;
+
+  document.getElementById("lessonCounter").textContent =
+    `Lesson ${index + 1} of ${lessons.length}`;
+
+  document.getElementById("progressFill").style.width =
+    `${((index + 1) / lessons.length) * 100}%`;
+
+  document.querySelectorAll("#lessonList a").forEach((link, i) => {
+    link.classList.toggle("active", i === index);
+  });
+
+  document.getElementById("backBtn").disabled = index === 0;
+  document.getElementById("nextBtn").disabled = index === lessons.length - 1;
+
+  runCode();
+}
+
+function runCode() {
+  const frame = document.getElementById("preview");
+  const css = editor.value.replace(/<\/style/gi, "<\\/style");
+
+  frame.srcdoc = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  color: #222;
+  padding: 18px;
+  line-height: 1.6;
+}
+.demo { max-width: 650px; margin: auto; }
+.card {
+  padding: 15px;
+  margin: 15px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+button { padding: 8px 12px; cursor: pointer; }
+${css}
+</style>
+</head>
+<body>${sampleHTML}</body>
+</html>`;
+}
+
+function resetCode() {
+  editor.value = originalCode;
+  runCode();
+}
+
+function changeLesson(direction) {
+  showLesson(currentLesson + direction);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+showLesson(0);
+</script>
+</body>
+</html>

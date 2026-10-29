@@ -1,0 +1,500 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Tutorial | CodeSeekho</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#030b20;color:#eaf2ff}
+a{color:inherit;text-decoration:none}
+.topbar{padding:16px 22px;background:#07152e;border-bottom:1px solid #183454}
+.home{display:inline-block;background:#00e8c0;color:#03111d;padding:10px 16px;border-radius:6px;font-weight:bold}
+.brand{margin-left:15px;font-size:22px;font-weight:bold;color:#00e8c0}
+.layout{display:flex;align-items:flex-start}
+aside{width:270px;flex-shrink:0;height:calc(100vh - 64px);overflow-y:auto;position:sticky;top:0;background:#07152e;border-right:1px solid #183454;padding:18px 12px}
+aside h3{color:#00e8c0;margin:4px 8px 15px}
+aside a{display:block;padding:10px;border-radius:5px;font-size:14px;color:#d5e4fa;margin:3px 0}
+aside a:hover,aside a.active{background:#10354a;color:#00e8c0}
+main{padding:24px;width:100%;max-width:1100px;margin:auto;min-width:0}
+h1,h2{color:#00e8c0}
+p,li{line-height:1.7}
+.panel{background:#091a34;border:1px solid #193654;border-radius:10px;padding:20px;margin:18px 0}
+.example{background:#020914;border:1px solid #213954;border-radius:8px;padding:15px;overflow-x:auto}
+pre{color:#9df9d9;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.6}
+.try-title{margin-bottom:10px}
+.editor{width:100%;height:540px;border:1px solid #294b69;border-radius:8px;background:white}
+.lesson-controls{display:flex;justify-content:space-between;gap:12px;margin:20px 0}
+.btn{border:0;border-radius:6px;padding:12px 20px;font-weight:bold;cursor:pointer;font-size:15px}
+.back{background:#23364e;color:white}
+.next{background:#00e8c0;color:#03111d}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.note{color:#a9bdd6;font-size:14px}
+@media(max-width:760px){
+ .layout{display:block}
+ aside{position:relative;width:100%;height:230px;border-right:0;border-bottom:1px solid #183454}
+ main{padding:15px}
+ .editor{height:450px}
+ .brand{display:block;margin:12px 0 0}
+}
+</style>
+</head>
+
+<body>
+<header class="topbar">
+<a class="home" href="index.html">← Back to Home</a>
+<span class="brand">CodeSeekho | Python Tutorial</span>
+</header>
+
+<div class="layout">
+<aside>
+<h3>Python Tutorial</h3>
+<div id="lessonLinks"></div>
+</aside>
+
+<main>
+<div id="lessonContent"></div>
+
+<section id="try-it" class="panel">
+<h2 class="try-title">Try It Yourself</h2>
+<p>Write Python code in the editor below and click Run to see the output.</p>
+<iframe
+ class="editor"
+ title="Online Python Code Editor"
+ src="https://onecompiler.com/embed/python"
+ loading="lazy"
+ allow="clipboard-read; clipboard-write"
+></iframe>
+<p class="note">Online editor provided by OneCompiler. An internet connection is required.</p>
+</section>
+
+<div class="lesson-controls">
+<button id="backBtn" class="btn back" onclick="previousLesson()">← Back</button>
+<button id="nextBtn" class="btn next" onclick="nextLesson()">Next →</button>
+</div>
+<p class="note" id="lessonStatus" aria-live="polite"></p>
+</main>
+</div>
+
+<script>
+const lessons = [
+{
+title:"Introduction to Python",
+definition:"Python is a high-level, general-purpose programming language. Its simple syntax makes it suitable for beginners and professionals.",
+points:["Python is easy to read and write.","It supports procedural and object-oriented programming.","It is used in web development, automation, data analysis and AI."],
+code:'print("Hello, World!")',
+output:"Hello, World!"
+},
+{
+title:"Features of Python",
+definition:"Python provides features that make writing and maintaining programs easier.",
+points:["Simple and readable syntax.","Interpreted programming language.","Supports multiple programming styles.","Large standard library.","Works on Windows, Linux and macOS."],
+code:'print("Python is simple")\nprint("Python is powerful")',
+output:"Python is simple\nPython is powerful"
+},
+{
+title:"Installing Python",
+definition:"Python can be installed from the official Python website. After installation, you can run Python using its interpreter or an editor.",
+points:["Download Python from python.org.","On Windows, select the option to add Python to PATH when available.","Verify the installation with python --version in Command Prompt."],
+code:'print("Python is ready!")',
+output:"Python is ready!"
+},
+{
+title:"Your First Python Program",
+definition:"A Python program contains instructions that the interpreter executes. The print() function displays information.",
+code:'print("Welcome to CodeSeekho")',
+output:"Welcome to CodeSeekho"
+},
+{
+title:"Python Syntax",
+definition:"Syntax means the rules used to write valid statements in a programming language. Python uses indentation to define code blocks.",
+code:'if 5 > 2:\n    print("Five is greater than two")',
+output:"Five is greater than two"
+},
+{
+title:"Comments in Python",
+definition:"Comments explain code to readers. Python ignores comments beginning with the # symbol.",
+code:'# This is a comment\nprint("Learn Python")',
+output:"Learn Python"
+},
+{
+title:"Python Variables",
+definition:"A variable is a name that refers to a value. Python creates a variable when you assign a value to it.",
+code:'name = "Aman"\nage = 20\nprint(name)\nprint(age)',
+output:"Aman\n20"
+},
+{
+title:"Variable Naming Rules",
+definition:"Variable names identify stored values. They can contain letters, numbers and underscores, but cannot start with a number.",
+points:["Names are case-sensitive.","Do not use Python keywords as variable names.","Use meaningful names such as student_name."],
+code:'student_name = "Ravi"\nstudent_age = 19\nprint(student_name, student_age)',
+output:"Ravi 19"
+},
+{
+title:"Data Types",
+definition:"A data type describes the kind of value stored in a variable. Common Python types include int, float, str and bool.",
+code:'age = 18\nprice = 99.5\nname = "Riya"\npassed = True\nprint(type(age))\nprint(type(price))\nprint(type(name))\nprint(type(passed))',
+output:"<class 'int'>\n<class 'float'>\n<class 'str'>\n<class 'bool'>"
+},
+{
+title:"Type Conversion",
+definition:"Type conversion changes a value from one data type to another using functions such as int(), float() and str().",
+code:'number = "25"\nnumber = int(number)\nprint(number + 5)',
+output:"30"
+},
+{
+title:"Taking User Input",
+definition:"The input() function reads text entered by the user. Convert the returned text when you need a number.",
+code:'name = input("Enter your name: ")\nprint("Hello", name)',
+output:"Enter your name: Aman\nHello Aman"
+},
+{
+title:"Output Using print()",
+definition:"The print() function displays values on the screen. It can display text, variables and multiple values.",
+code:'name = "Aman"\nmarks = 85\nprint("Name:", name)\nprint("Marks:", marks)',
+output:"Name: Aman\nMarks: 85"
+},
+{
+title:"Python Operators",
+definition:"Operators perform operations on values and variables. Common groups include arithmetic, comparison, logical and assignment operators.",
+code:'a = 10\nb = 3\nprint(a + b)\nprint(a * b)\nprint(a > b)',
+output:"13\n30\nTrue"
+},
+{
+title:"Arithmetic Operators",
+definition:"Arithmetic operators perform mathematical calculations. Examples include addition, subtraction, multiplication, division and modulus.",
+code:'a = 10\nb = 3\nprint(a + b)\nprint(a - b)\nprint(a * b)\nprint(a / b)\nprint(a % b)',
+output:"13\n7\n30\n3.3333333333333335\n1"
+},
+{
+title:"Comparison Operators",
+definition:"Comparison operators compare two values and return True or False.",
+code:'a = 10\nb = 5\nprint(a == b)\nprint(a != b)\nprint(a > b)\nprint(a < b)',
+output:"False\nTrue\nTrue\nFalse"
+},
+{
+title:"Logical Operators",
+definition:"Logical operators combine or reverse conditions. Python provides and, or and not.",
+code:'age = 20\nprint(age >= 18 and age < 60)\nprint(age < 18 or age > 60)\nprint(not age < 18)',
+output:"True\nFalse\nTrue"
+},
+{
+title:"If Statement",
+definition:"An if statement executes a block of code when its condition is true.",
+code:'age = 20\nif age >= 18:\n    print("You are an adult")',
+output:"You are an adult"
+},
+{
+title:"If-Else Statement",
+definition:"An if-else statement chooses between two blocks depending on whether a condition is true or false.",
+code:'number = 7\nif number % 2 == 0:\n    print("Even")\nelse:\n    print("Odd")',
+output:"Odd"
+},
+{
+title:"Elif Statement",
+definition:"The elif statement checks another condition when the previous if or elif condition was false.",
+code:'marks = 75\nif marks >= 90:\n    print("Grade A")\nelif marks >= 60:\n    print("Grade B")\nelse:\n    print("Grade C")',
+output:"Grade B"
+},
+{
+title:"Nested If Statement",
+definition:"A nested if statement is an if statement placed inside another if block. It helps check related conditions.",
+code:'age = 20\nhas_id = True\nif age >= 18:\n    if has_id:\n        print("Entry allowed")',
+output:"Entry allowed"
+},
+{
+title:"For Loop",
+definition:"A for loop repeats a block for each item in a sequence, such as a list or range.",
+code:'for i in range(1, 6):\n    print(i)',
+output:"1\n2\n3\n4\n5"
+},
+{
+title:"While Loop",
+definition:"A while loop repeats a block while its condition remains true. Update the condition-related variables to avoid an infinite loop.",
+code:'i = 1\nwhile i <= 5:\n    print(i)\n    i += 1',
+output:"1\n2\n3\n4\n5"
+},
+{
+title:"Break Statement",
+definition:"The break statement immediately stops the nearest loop.",
+code:'for i in range(1, 6):\n    if i == 4:\n        break\n    print(i)',
+output:"1\n2\n3"
+},
+{
+title:"Continue Statement",
+definition:"The continue statement skips the remaining statements in the current loop iteration and moves to the next iteration.",
+code:'for i in range(1, 6):\n    if i == 3:\n        continue\n    print(i)',
+output:"1\n2\n4\n5"
+},
+{
+title:"Pass Statement",
+definition:"The pass statement performs no action. It can be used as a placeholder where Python syntax requires a statement.",
+code:'for i in range(3):\n    pass\nprint("Program completed")',
+output:"Program completed"
+},
+{
+title:"Python Strings",
+definition:"A string is a sequence of characters enclosed in quotes. Strings are commonly used to store text.",
+code:'message = "Hello Python"\nprint(message)\nprint(len(message))',
+output:"Hello Python\n12"
+},
+{
+title:"String Methods",
+definition:"String methods perform operations such as changing letter case, removing surrounding spaces and replacing text.",
+code:'text = "  hello python  "\nprint(text.strip())\nprint(text.upper())\nprint(text.replace("python", "world"))',
+output:"hello python\n  HELLO PYTHON  \n  hello world  "
+},
+{
+title:"String Slicing",
+definition:"Slicing extracts part of a string using a starting index, an ending index and an optional step. The ending index is excluded.",
+code:'word = "Python"\nprint(word[0:3])\nprint(word[2:])\nprint(word[-1])',
+output:"Pyt\nthon\nn"
+},
+{
+title:"Python Lists",
+definition:"A list stores multiple items in an ordered, changeable collection. Lists can contain values of different data types.",
+code:'fruits = ["apple", "banana", "mango"]\nprint(fruits)\nprint(fruits[0])',
+output:"['apple', 'banana', 'mango']\napple"
+},
+{
+title:"List Methods",
+definition:"List methods help add, remove and arrange items. Common methods include append(), insert(), remove() and sort().",
+code:'numbers = [3, 1, 2]\nnumbers.append(4)\nnumbers.sort()\nprint(numbers)',
+output:"[1, 2, 3, 4]"
+},
+{
+title:"Tuples",
+definition:"A tuple is an ordered collection that cannot be changed after creation. Tuples are written using parentheses.",
+code:'colors = ("red", "green", "blue")\nprint(colors[0])\nprint(len(colors))',
+output:"red\n3"
+},
+{
+title:"Sets",
+definition:"A set is a collection of unique items. Sets do not guarantee a fixed display order and are useful for removing duplicates.",
+code:'numbers = {1, 2, 2, 3}\nprint(sorted(numbers))\nnumbers.add(4)\nprint(sorted(numbers))',
+output:"[1, 2, 3]\n[1, 2, 3, 4]"
+},
+{
+title:"Dictionaries",
+definition:"A dictionary stores data as key-value pairs. Keys are used to access their associated values.",
+code:'student = {"name": "Aman", "age": 20}\nprint(student["name"])\nprint(student["age"])',
+output:"Aman\n20"
+},
+{
+title:"Functions",
+definition:"A function is a reusable block of code that performs a particular task. It is defined using the def keyword.",
+code:'def greet():\n    print("Hello!")\n\ngreet()',
+output:"Hello!"
+},
+{
+title:"Function Parameters",
+definition:"Parameters allow a function to receive information. Arguments are the actual values supplied when calling the function.",
+code:'def greet(name):\n    print("Hello", name)\n\ngreet("Riya")',
+output:"Hello Riya"
+},
+{
+title:"Return Statement",
+definition:"The return statement sends a result back from a function. The returned value can be stored or used in an expression.",
+code:'def add(a, b):\n    return a + b\n\nresult = add(5, 3)\nprint(result)',
+output:"8"
+},
+{
+title:"Lambda Functions",
+definition:"A lambda is a small anonymous function written with the lambda keyword. It can contain only one expression.",
+code:'square = lambda x: x * x\nprint(square(5))',
+output:"25"
+},
+{
+title:"Recursion",
+definition:"Recursion occurs when a function calls itself. A recursive function needs a base case to stop further calls.",
+code:'def countdown(n):\n    if n == 0:\n        print("Done")\n    else:\n        print(n)\n        countdown(n - 1)\n\ncountdown(3)',
+output:"3\n2\n1\nDone"
+},
+{
+title:"Modules",
+definition:"A module is a Python file containing reusable code. You can import modules to use their functions and values.",
+code:'import math\nprint(math.sqrt(25))\nprint(math.factorial(5))',
+output:"5.0\n120"
+},
+{
+title:"The random Module",
+definition:"The random module provides functions for generating pseudo-random values and making random selections.",
+code:'import random\nprint(random.randint(1, 10))',
+output:"A random integer from 1 to 10"
+},
+{
+title:"Exception Handling",
+definition:"Exception handling allows a program to respond to runtime errors using try and except blocks.",
+code:'try:\n    number = int("abc")\nexcept ValueError:\n    print("Please enter a valid number")',
+output:"Please enter a valid number"
+},
+{
+title:"File Handling",
+definition:"File handling allows programs to read and write data stored in files. The with statement helps close files automatically.",
+code:'with open("demo.txt", "w") as file:\n    file.write("Hello File")\n\nwith open("demo.txt", "r") as file:\n    print(file.read())',
+output:"Hello File"
+},
+{
+title:"Read and Write Files",
+definition:"Python provides read(), readline() and readlines() for reading files, and write() for writing text.",
+code:'with open("notes.txt", "w") as file:\n    file.write("Learn Python")\n\nwith open("notes.txt", "r") as file:\n    content = file.read()\n    print(content)',
+output:"Learn Python"
+},
+{
+title:"Object-Oriented Programming",
+definition:"Object-oriented programming organizes code using classes and objects. It helps group related data and behavior together.",
+code:'class Student:\n    def greet(self):\n        print("Hello Student")\n\ns = Student()\ns.greet()',
+output:"Hello Student"
+},
+{
+title:"Classes and Objects",
+definition:"A class is a blueprint for creating objects. An object is an instance of a class.",
+code:'class Car:\n    color = "Red"\n\ncar1 = Car()\nprint(car1.color)',
+output:"Red"
+},
+{
+title:"The Constructor",
+definition:"The __init__() method initializes an object when it is created. It is commonly used to assign initial attribute values.",
+code:'class Student:\n    def __init__(self, name):\n        self.name = name\n\ns = Student("Aman")\nprint(s.name)',
+output:"Aman"
+},
+{
+title:"Inheritance",
+definition:"Inheritance allows one class to reuse and extend the attributes and methods of another class.",
+code:'class Animal:\n    def speak(self):\n        print("Animal sound")\n\nclass Dog(Animal):\n    pass\n\nd = Dog()\nd.speak()',
+output:"Animal sound"
+},
+{
+title:"Polymorphism",
+definition:"Polymorphism allows the same method name or interface to work with different types of objects.",
+code:'class Dog:\n    def speak(self):\n        print("Bark")\n\nclass Cat:\n    def speak(self):\n        print("Meow")\n\nfor animal in [Dog(), Cat()]:\n    animal.speak()',
+output:"Bark\nMeow"
+},
+{
+title:"Encapsulation",
+definition:"Encapsulation groups data and methods inside a class. Python uses naming conventions and name mangling to support data hiding.",
+code:'class Account:\n    def __init__(self):\n        self.__balance = 100\n    def show_balance(self):\n        print(self.__balance)\n\naccount = Account()\naccount.show_balance()',
+output:"100"
+},
+{
+title:"List Comprehension",
+definition:"List comprehension creates a new list using a compact expression, often combining a loop with an optional condition.",
+code:'squares = [n * n for n in range(1, 6)]\nprint(squares)',
+output:"[1, 4, 9, 16, 25]"
+},
+{
+title:"Python Project: Simple Calculator",
+definition:"A calculator combines input, type conversion, conditions and arithmetic operators in one small program.",
+code:'a = float(input("First number: "))\nb = float(input("Second number: "))\nop = input("Operator (+, -, *, /): ")\n\nif op == "+":\n    print(a + b)\nelif op == "-":\n    print(a - b)\nelif op == "*":\n    print(a * b)\nelif op == "/" and b != 0:\n    print(a / b)\nelse:\n    print("Invalid operation")',
+output:"Enter two numbers and an operator to calculate the result."
+},
+{
+title:"Python Project: Number Guessing",
+definition:"A number guessing game uses random numbers, user input and conditions. The player tries to guess a hidden number.",
+code:'import random\nsecret = random.randint(1, 10)\nguess = int(input("Guess a number from 1 to 10: "))\n\nif guess == secret:\n    print("Correct guess!")\nelse:\n    print("The number was", secret)',
+output:"The result depends on your guess."
+},
+{
+title:"Python Project: Student Marks",
+definition:"This beginner project stores student marks and calculates their average. It demonstrates lists, loops and basic arithmetic.",
+code:'marks = [75, 80, 90, 85, 70]\ntotal = sum(marks)\naverage = total / len(marks)\nprint("Total:", total)\nprint("Average:", average)',
+output:"Total: 400\nAverage: 80.0"
+}
+];
+
+let currentLesson = 0;
+
+const linksBox = document.getElementById("lessonLinks");
+const contentBox = document.getElementById("lessonContent");
+
+lessons.forEach((lesson, index) => {
+    const link = document.createElement("a");
+    link.href = "#lesson-" + (index + 1);
+    link.textContent = (index + 1) + ". " + lesson.title;
+    link.addEventListener("click", function(event) {
+        event.preventDefault();
+        showLesson(index);
+    });
+    linksBox.appendChild(link);
+});
+
+function showLesson(index) {
+    if (index < 0 || index >= lessons.length) return;
+
+    currentLesson = index;
+    const lesson = lessons[index];
+
+    let html = `
+      <div class="panel">
+        <p class="note">Lesson ${index + 1} of ${lessons.length}</p>
+        <h1>${lesson.title}</h1>
+        <h2>Definition</h2>
+        <p>${lesson.definition}</p>`;
+
+    if (lesson.points) {
+        html += "<h2>Important Points</h2><ul>";
+        lesson.points.forEach(point => {
+            html += `<li>${point}</li>`;
+        });
+        html += "</ul>";
+    }
+
+    html += `
+        <h2>Example</h2>
+        <div class="example"><pre>${escapeHtml(lesson.code)}</pre></div>
+        <h2>Output / Result</h2>
+        <div class="example"><pre>${escapeHtml(lesson.output)}</pre></div>
+      </div>`;
+
+    contentBox.innerHTML = html;
+
+    document.querySelectorAll("#lessonLinks a").forEach((link, i) => {
+        link.classList.toggle("active", i === index);
+    });
+
+    document.getElementById("backBtn").disabled = index === 0;
+
+    document.getElementById("nextBtn").textContent =
+        index === lessons.length - 1 ? "Finish ✓" : "Next →";
+
+    document.getElementById("nextBtn").disabled =
+        index === lessons.length - 1;
+
+    document.getElementById("lessonStatus").textContent =
+        index === lessons.length - 1
+        ? "You have reached the last lesson. Well done!"
+        : "";
+}
+
+function escapeHtml(text) {
+    return text.replace(/[&<>"']/g, function(char) {
+        return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[char];
+    });
+}
+
+function previousLesson() {
+    if (currentLesson > 0) {
+        showLesson(currentLesson - 1);
+        window.scrollTo({top: 0, behavior: "smooth"});
+    }
+}
+
+function nextLesson() {
+    if (currentLesson < lessons.length - 1) {
+        showLesson(currentLesson + 1);
+        window.scrollTo({top: 0, behavior: "smooth"});
+    }
+}
+
+showLesson(0);
+</script>
+</body>
+</html>

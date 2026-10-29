@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodeBot Adventures | CodeSeekho</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#172b64,#070c20 60%,#02040d);color:#f3f7ff;font-family:Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#070c20ee;border-bottom:1px solid #29416d;padding:15px 4%;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.logo{font-size:22px;font-weight:900}.logo span{color:#36eaff}
+.coins{background:#28233b;border:1px solid #75602a;border-radius:20px;padding:10px;color:#ffdb68;font-weight:bold}
+main{width:min(1100px,95%);margin:22px auto}
+.page{display:none}.page.active{display:block}
+.hero{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:15px;background:linear-gradient(135deg,#102751,#20174e);border:1px solid #40588d;border-radius:25px;padding:30px;overflow:hidden}
+.hero h1{font-size:clamp(35px,6vw,65px);margin:12px 0}.hero h1 span{color:#42eaff}
+.hero p{line-height:1.7;color:#c9d8f7}
+.mascot{text-align:center;font-size:clamp(100px,19vw,175px);filter:drop-shadow(0 0 25px #32eaff66);animation:float 3s infinite ease-in-out}
+@keyframes float{50%{transform:translateY(-12px)}}
+button{cursor:pointer;border:0;font-weight:bold}
+button:disabled{opacity:.4;cursor:not-allowed}
+.btn{padding:12px 17px;border-radius:11px;background:linear-gradient(135deg,#34f0b0,#25c9e9);color:#041322;box-shadow:0 4px 0 #08788b}
+.btn.alt{background:#192b50;color:white;border:1px solid #385487;box-shadow:none}
+.btn.purple{background:linear-gradient(135deg,#bd76ff,#6447ff);color:white;box-shadow:0 4px 0 #38249c}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:25px 0 15px}
+.muted{color:#aebddd;font-size:13px;line-height:1.6}
+.features,.worlds,.robots{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.feature,.panel,.robot{background:linear-gradient(145deg,#101e40,#091329);border:1px solid #263e68;border-radius:16px;padding:15px}
+.feature{text-align:center}.feature .emoji{font-size:30px}.feature strong{display:block;margin:8px 0}
+.world{min-height:160px;text-align:left;color:white;padding:14px;border-radius:15px;border:1px solid #46608b;background:linear-gradient(145deg,var(--c),#091329);transition:.2s}
+.world:hover,.robot:hover{transform:translateY(-3px)}
+.world .emoji{display:block;font-size:34px;margin:12px 0}.world small{color:#e1e9ff}
+.levels{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.level{min-height:70px;border:1px solid #304975;border-radius:12px;background:#101e3e;color:white}
+.level:disabled{opacity:.35;cursor:not-allowed}.level.done{background:#0c3c35;border-color:#28d9a4}
+.level strong{display:block;font-size:20px}.level small{color:#b7c8e9}
+.gamehead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:13px}
+.gamegrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);gap:15px}
+.board{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;background:#040918;padding:8px;border:1px solid #314e7b;border-radius:12px;max-width:520px;margin:auto}
+.tile{aspect-ratio:1;border:1px solid #46bd7c;border-radius:6px;background:linear-gradient(145deg,#26935a,#124b39);display:flex;align-items:center;justify-content:center;font-size:clamp(18px,3.5vw,30px)}
+.tile.ice{background:linear-gradient(145deg,#77e7ff,#277fc4)}
+.tile.lava{background:linear-gradient(145deg,#ff8740,#a82b30)}
+.tile.space{background:linear-gradient(145deg,#6554d9,#171b57)}
+.tile.desert{background:linear-gradient(145deg,#f4cd77,#a16a32)}
+.tile.water{background:linear-gradient(145deg,#45dce9,#1766b8)}
+.tile.jungle{background:linear-gradient(145deg,#9bc54a,#28623b)}
+.tile.robotworld{background:linear-gradient(145deg,#a17bff,#4541a0)}
+.tile.sky{background:linear-gradient(145deg,#b2eaff,#5089d8)}
+.tile.crystal{background:linear-gradient(145deg,#e2a9ff,#793bb8)}
+.tile.block{filter:brightness(.45)}
+.question{background:#0a1732;border:1px solid #294575;border-radius:12px;padding:13px;line-height:1.6;margin:12px 0}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.answer{padding:12px;border-radius:9px;background:#192b50;border:1px solid #385487;color:white;text-align:left}
+.answer:hover{border-color:#36eaff}
+.answer.correct{background:#0b392e;border-color:#34f0b0}
+.answer.wrong{background:#48212e;border-color:#ff7589}
+.message{background:#101e3d;color:#d1def8;border-radius:9px;padding:12px;margin-top:12px;min-height:42px;font-size:14px;line-height:1.5}
+.message.good{background:#0b392e;color:#91ffcf}.message.bad{background:#48212e;color:#ffc4ce}
+.robot{text-align:center}.robot .emoji{font-size:43px}.robot strong{display:block;margin:8px 0}.robot small{color:#aebddd;display:block;min-height:30px}
+.robot button{width:100%;margin-top:10px;padding:9px;border-radius:9px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{padding:20px;background:#0b1732;border:1px solid #263e68;border-radius:15px}
+.stat strong{display:block;font-size:26px;color:#ffda67;margin-top:8px}
+.modal{position:fixed;inset:0;background:#020510dd;z-index:10;display:none;align-items:center;justify-content:center;padding:15px}
+.modal.show{display:flex}
+.modalbox{width:min(450px,100%);text-align:center;background:linear-gradient(145deg,#1a2c59,#0a1530);border:1px solid #5b77ad;border-radius:22px;padding:28px}
+.modalbox .emoji{font-size:65px}
+footer{text-align:center;color:#788bb0;padding:25px;font-size:12px}
+@media(max-width:800px){.hero{grid-template-columns:1fr}.mascot{font-size:100px}.features,.worlds{grid-template-columns:repeat(2,minmax(0,1fr))}.gamegrid{grid-template-columns:1fr}.robots{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:430px){.levels{gap:5px}.level{min-height:60px}.robots{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding:20px}.answers{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">⚡ Code<span>Seekho</span> <span style="color:#a68cff">/ CodeBot</span></div>
+ <div class="coins">🪙 <span id="coinCount">0</span></div>
+</header>
+
+<main>
+<section id="home" class="page active">
+ <div class="hero">
+  <div>
+   <div style="color:#38eaff;font-weight:bold;letter-spacing:2px">LEARN • CODE • WIN</div>
+   <h1>CodeBot<br><span>Adventures</span></h1>
+   <p>Questions solve karo, robot ko flag tak pahunchao aur naye robots unlock karo!</p>
+   <div class="actions">
+    <button class="btn" onclick="go('worldPage')">▶ Play Game</button>
+    <button class="btn alt" onclick="go('statsPage')">📊 Game Stats</button>
+   </div>
+   <button class="btn purple" onclick="go('robotPage')">🤖 Robot Collection</button>
+  </div>
+  <div class="mascot" id="homeBot">🤖</div>
+ </div>
+ <div class="sectionhead"><h2>Your Adventure</h2><span class="muted">Progress resets when you reopen the game</span></div>
+ <div class="features">
+  <div class="feature"><div class="emoji">🧠</div><strong>Quiz Questions</strong><span class="muted">Think and answer</span></div>
+  <div class="feature"><div class="emoji">🪙</div><strong>Earn Coins</strong><span class="muted">10 per level</span></div>
+  <div class="feature"><div class="emoji">🤖</div><strong>15 Robots</strong><span class="muted">Collect them all</span></div>
+  <div class="feature"><div class="emoji">🌍</div><strong>250 Levels</strong><span class="muted">10 worlds × 25</span></div>
+ </div>
+ <p class="muted">No in-game ads. Progress is not saved in browser storage.</p>
+</section>
+
+<section id="worldPage" class="page">
+ <div class="sectionhead"><div><h2>🌌 Choose Your World</h2><div class="muted">Complete all 25 levels for 500 bonus coins.</div></div><button class="btn alt" onclick="go('home')">← Home</button></div>
+ <div id="worlds" class="worlds"></div>
+</section>
+
+<section id="levelPage" class="page">
+ <div class="sectionhead"><div><h2 id="worldHeading">World Levels</h2><div class="muted" id="worldInfo"></div></div><button class="btn alt" onclick="go('worldPage')">← Worlds</button></div>
+ <div class="panel"><div class="levels" id="levels"></div></div>
+ <p class="muted">Difficulty increases every 5 levels: Easy → Medium → Hard → Expert → Master.</p>
+</section>
+
+<section id="gamePage" class="page">
+ <div class="gamehead">
+  <button class="btn alt" onclick="go('levelPage')">← Levels</button>
+  <span id="worldTag" class="coins">Forest World</span>
+  <span id="diffTag" class="coins">Easy</span>
+ </div>
+ <div class="gamegrid">
+  <div class="panel">
+   <div class="gamehead"><h2 id="levelHeading">Level 1 / 25</h2></div>
+   <div class="board" id="board"></div>
+   <div class="actions">
+    <button class="btn alt" onclick="resetRobot()">↻ Reset Robot</button>
+   </div>
+  </div>
+  <div class="panel">
+   <h2>🧠 Question Time</h2>
+   <div class="question" id="question"></div>
+   <div id="answers" class="answers"></div>
+   <div id="quizMessage" class="message">Choose the correct answer to move the robot to the flag.</div>
+  </div>
+ </div>
+</section>
+
+<section id="robotPage" class="page">
+ <div class="sectionhead"><div><h2>🤖 Robot Collection</h2><div class="muted">Unlock robots using coins.</div></div><button class="btn alt" onclick="go('home')">← Home</button></div>
+ <div class="panel" style="margin-bottom:14px">Active robot: <strong id="activeName">Astro Bot</strong> <span id="activeEmoji">🤖</span></div>
+ <div id="robots" class="robots"></div>
+</section>
+
+<section id="statsPage" class="page">
+ <div class="sectionhead"><h2>📊 Game Stats</h2><button class="btn alt" onclick="go('home')">← Home</button></div>
+ <div class="stats">
+  <div class="stat">🪙 Coins<strong id="statCoins">0</strong></div>
+  <div class="stat">🏁 Levels cleared<strong id="statLevels">0 / 250</strong></div>
+  <div class="stat">🌍 Worlds completed<strong id="statWorlds">0 / 10</strong></div>
+ </div>
+ <p class="muted">Stats reset when you reload or reopen the game.</p>
+</section>
+</main>
+
+<footer>CodeSeekho • CodeBot Adventures • Learn coding through play</footer>
+
+<div class="modal" id="modal">
+ <div class="modalbox">
+  <div class="emoji" id="modalEmoji">🎉</div>
+  <h2 id="modalTitle">Level Complete!</h2>
+  <p id="modalText">You earned 10 coins!</p>
+  <div class="actions" style="justify-content:center">
+   <button class="btn" onclick="nextAction()" id="modalNext">Next Level →</button>
+   <button class="btn alt" onclick="closeModal()">Stay Here</button>
+  </div>
+ </div>
+</div>
+
+<script>
+const worlds=[
+{name:"Forest World",emoji:"🌳",theme:"",color:"#1b965b",desc:"Guide your robot through the forest."},
+{name:"Ice World",emoji:"❄️",theme:"ice",color:"#168bc4",desc:"Find the safe route across the ice."},
+{name:"Lava World",emoji:"🌋",theme:"lava",color:"#d94a25",desc:"Avoid obstacles on the lava trail."},
+{name:"Space World",emoji:"🪐",theme:"space",color:"#6650d5",desc:"Explore the starry space maze."},
+{name:"Desert World",emoji:"🏜️",theme:"desert",color:"#bb8436",desc:"Cross the desert and reach the flag."},
+{name:"Underwater World",emoji:"🐠",theme:"water",color:"#168fb5",desc:"Find the way through the ocean."},
+{name:"Jungle World",emoji:"🌴",theme:"jungle",color:"#619b32",desc:"Navigate the hidden jungle route."},
+{name:"Robot World",emoji:"⚙️",theme:"robotworld",color:"#8060e8",desc:"Solve the futuristic robot maze."},
+{name:"Sky World",emoji:"☁️",theme:"sky",color:"#5a9bdc",desc:"Cross floating paths in the sky."},
+{name:"Crystal World",emoji:"💎",theme:"crystal",color:"#ad4dd0",desc:"Complete the final crystal challenge."}
+];
+
+const bots=[
+["Astro Bot","🤖",0,"Brave beginner buddy."],
+["Ninja Bot","🥷",150,"Quick and clever."],
+["Dino Bot","🦖",250,"A mighty dinosaur coding buddy."],
+["Fox Bot","🦊",350,"Fast, smart and curious."],
+["Dragon Bot","🐉",500,"A legendary dragon friend."],
+["Cat Bot","🐱",650,"Cute, clever and quick."],
+["Panda Bot","🐼",800,"A friendly forest explorer."],
+["Shark Bot","🦈",1000,"A fearless ocean explorer."],
+["Alien Bot","👽",1200,"A visitor from another galaxy."],
+["Knight Bot","🛡️",1500,"A brave guardian."],
+["Wizard Bot","🧙",1800,"A magical puzzle solver."],
+["Phoenix Bot","🦅",2200,"A powerful sky warrior."],
+["Titan Bot","🦾",2600,"A powerful champion."],
+["Unicorn Bot","🦄",3200,"A rare magical companion."],
+["Legend Bot","🐲",4000,"The ultimate CodeSeekho champion."]
+];
+
+const quizBank=[
+{q:"Which tag creates a heading in HTML?",a:["<head>","<h1>","<title>","<p>"],correct:1,ex:"The h1 tag creates the largest-level HTML heading."},
+{q:"Which tag creates a paragraph?",a:["<para>","<text>","<p>","<pg>"],correct:2,ex:"The p tag defines a paragraph."},
+{q:"Which HTML tag creates a hyperlink?",a:["<a>","<linkto>","<href>","<url>"],correct:0,ex:"The a tag creates a hyperlink using the href attribute."},
+{q:"Which attribute specifies a link destination?",a:["src","alt","name","href"],correct:3,ex:"The href attribute stores the destination URL."},
+{q:"Which tag displays an image?",a:["<picturefile>","<img>","<image>","<src>"],correct:1,ex:"The img tag embeds an image in a page."},
+{q:"Which attribute provides alternative image text?",a:["titleonly","href","alt","text"],correct:2,ex:"The alt attribute describes an image for accessibility."},
+{q:"Which tag creates an unordered list?",a:["<ul>","<ol>","<li>","<list>"],correct:0,ex:"The ul tag creates a bulleted list."},
+{q:"Which tag represents a list item?",a:["<item>","<ul>","<ol>","<li>"],correct:3,ex:"The li tag defines an item in a list."},
+{q:"Which HTML tag creates a table row?",a:["<td>","<tr>","<th>","<table-row>"],correct:1,ex:"The tr tag defines a table row."},
+{q:"Which tag defines a table header cell?",a:["<td>","<theadcell>","<th>","<tr>"],correct:2,ex:"The th tag defines a header cell."},
+{q:"Which tag creates a text input field?",a:["<input>","<textbox>","<textinput>","<field>"],correct:0,ex:"An input element can create a text field."},
+{q:"Which attribute makes a form field mandatory?",a:["needed","must","validate","required"],correct:3,ex:"The required attribute prevents submission when a required field is empty."},
+{q:"Which tag creates a button?",a:["<click>","<button>","<press>","<btnbox>"],correct:1,ex:"The button element creates a clickable button."},
+{q:"Which HTML tag contains page metadata?",a:["<body>","<footer>","<head>","<main>"],correct:2,ex:"The head element contains metadata and resource references."},
+{q:"Which declaration identifies an HTML5 document?",a:["<!DOCTYPE html>","<html5>","<!HTML>","<doctype>"],correct:0,ex:"DOCTYPE tells the browser to use standards mode for HTML."},
+{q:"Which tag is used for the main page content?",a:["<head>","<meta>","<title>","<main>"],correct:3,ex:"The main element contains the dominant content of the document."},
+{q:"Which tag represents a navigation section?",a:["<navigate>","<nav>","<links>","<menuitem>"],correct:1,ex:"The nav element groups navigation links."},
+{q:"Which tag adds a line break?",a:["<break>","<lb>","<br>","<newline>"],correct:2,ex:"The br element inserts a line break."},
+{q:"Which tag emphasizes text semantically?",a:["<em>","<italic-only>","<i-text>","<emphasis-text>"],correct:0,ex:"The em element gives text emphasis."},
+{q:"Which attribute provides a unique element identifier?",a:["class","style","type","id"],correct:3,ex:"An id should uniquely identify an element on a page."},
+{q:"What does CSS stand for?",a:["Computer Style System","Cascading Style Sheets","Creative Styling Syntax","Colorful Sheet System"],correct:1,ex:"CSS stands for Cascading Style Sheets."},
+{q:"Which CSS property changes text color?",a:["font-color","text-style","color","foreground"],correct:2,ex:"The color property sets the text color."},
+{q:"Which CSS property changes the background color?",a:["background-color","color-fill","bg","background-text"],correct:0,ex:"The background-color property sets an element's background color."},
+{q:"Which symbol selects a class in CSS?",a:["#",".","@","&"],correct:1,ex:"A period selects a class, such as .card."},
+{q:"Which symbol selects an ID in CSS?",a:[".","*","#","$"],correct:2,ex:"The hash symbol selects an ID, such as #header."},
+{q:"Which CSS property changes text size?",a:["text-size","font-style","size","font-size"],correct:3,ex:"The font-size property controls text size."},
+{q:"Which property adds space inside an element's border?",a:["padding","margin","gap-out","outline"],correct:0,ex:"Padding is the space between content and its border."},
+{q:"Which property adds space outside an element's border?",a:["padding","margin","border-space","inset"],correct:1,ex:"Margin creates space outside an element's border."},
+{q:"Which CSS value enables Flexbox?",a:["display:block","position:flex","display:flex","layout:flex"],correct:2,ex:"display:flex enables a flex formatting context."},
+{q:"Which CSS layout is useful for rows and columns?",a:["Grid","Float only","Inline text","Underline"],correct:0,ex:"CSS Grid is designed for two-dimensional layouts."},
+{q:"Which property rounds element corners?",a:["corner-style","border-round","roundness","border-radius"],correct:3,ex:"border-radius rounds the corners of an element."},
+{q:"Which property controls an element's transparency?",a:["visibility-color","opacity","transparent-mode","alpha-text"],correct:1,ex:"Opacity typically ranges from 0 (transparent) to 1 (opaque)."},
+{q:"Which CSS rule is used for responsive breakpoints?",a:["@responsive","@screen-size","@media","@mobile"],correct:2,ex:"Media queries apply styles under specified conditions."},
+{q:"Which property sets the space between flex or grid items?",a:["gap","spacing-outside","item-margin-all","distance"],correct:0,ex:"The gap property sets gutters between layout items."},
+{q:"Which property controls the order of stacked elements?",a:["stack","layer-order","position-index","z-index"],correct:3,ex:"z-index controls stacking order for positioned elements and relevant layout items."},
+{q:"Which property hides content that overflows its box?",a:["hide-overflow","overflow:hidden","display:hide","clip-text-only"],correct:1,ex:"overflow:hidden clips overflowing content."},
+{q:"Which pseudo-class applies when an element is hovered?",a:["::move","::point"," :hover","@hover"],correct:2,ex:"The :hover pseudo-class applies while a pointer hovers over an element."},
+{q:"Which CSS unit is relative to the root font size?",a:["rem","px","cm","pt"],correct:0,ex:"rem is relative to the root element's font size."},
+{q:"Which property sets the font family?",a:["text-font","font-name","typeface","font-family"],correct:3,ex:"font-family specifies the preferred typeface list."},
+{q:"Which CSS property adds a shadow around a box?",a:["text-shadow-box","box-shadow","border-shadow","shadow-box"],correct:1,ex:"box-shadow adds a shadow around an element's box."},
+{q:"Which language adds interactivity to web pages?",a:["HTML alone","SQL","JavaScript","XML"],correct:2,ex:"JavaScript can respond to events and update page content."},
+{q:"Which keyword declares a block-scoped variable that can be reassigned?",a:["let","const","fixed","static"],correct:0,ex:"let declares a block-scoped variable that can be reassigned."},
+{q:"Which keyword declares a variable that cannot be reassigned?",a:["varies","const","change","finalize"],correct:1,ex:"const prevents reassignment of the variable binding."},
+{q:"Which operator checks strict equality in JavaScript?",a:["=","==","===","!="],correct:2,ex:"=== compares values without type coercion."},
+{q:"Which method prints a message in the browser console?",a:["console.print()","print.console()","log()","console.log()"],correct:3,ex:"console.log() writes information to the console."},
+{q:"Which method selects an element by its ID?",a:["document.getElementById()","document.findClass()","window.getID()","html.selectID()"],correct:0,ex:"getElementById returns the element with the matching ID."},
+{q:"Which event commonly runs when a button is clicked?",a:["hovered","click","pressed-down-only","loaded-text"],correct:1,ex:"A click event responds to a click on an element."},
+{q:"Which array method adds an item to the end?",a:["appendEnd()","insertLast()","push()","addFinal()"],correct:2,ex:"push() adds one or more elements to the end of an array."},
+{q:"Which array method removes the last item?",a:["pop()","removeFirst()","shiftEnd()","deleteLast()"],correct:0,ex:"pop() removes and returns the last array element."},
+{q:"What does JSON stand for?",a:["Java Source Object Names","Joined Standard Open Network","JavaScript Online Notes","JavaScript Object Notation"],correct:3,ex:"JSON is a text format for structured data."},
+{q:"Which statement repeats while a condition is true?",a:["switch","while","import","return"],correct:1,ex:"A while loop repeats as long as its condition is true."},
+{q:"Which keyword defines a function?",a:["method","func","function","define"],correct:2,ex:"The function keyword declares a JavaScript function."},
+{q:"What does NaN mean in JavaScript?",a:["Not a Number","New and Null","No assigned Name","Number at Null"],correct:0,ex:"NaN represents a value that is not a valid number."},
+{q:"Which value represents intentional absence of a value?",a:["0","false","empty string","null"],correct:3,ex:"null represents an intentional absence of an object value."},
+{q:"Which syntax starts a single-line JavaScript comment?",a:["<!--","//","##","**"],correct:1,ex:"Two forward slashes start a single-line comment."},
+{q:"Which method converts JSON text into a JavaScript value?",a:["JSON.convert()","JSON.read()","JSON.parse()","JSON.toValue()"],correct:2,ex:"JSON.parse() parses a JSON-formatted string."},
+{q:"Which method converts a JavaScript value to JSON text?",a:["JSON.stringify()","JSON.parse()","JSON.writeObject()","JSON.text()"],correct:0,ex:"JSON.stringify() serializes a value as JSON text."},
+{q:"Which operator gives the remainder after division?",a:["/","**","//","%"],correct:3,ex:"The percent operator returns the remainder."},
+{q:"Which keyword exits a loop immediately?",a:["skip","break","stopLoop","exitLoop"],correct:1,ex:"break terminates the nearest loop or switch."},
+{q:"Which keyword skips to the next loop iteration?",a:["pass","next","continue","again"],correct:2,ex:"continue skips the rest of the current iteration."},
+{q:"Which method converts a string to lowercase?",a:["toLowerCase()","lower()","makeSmall()","lowercaseText()"],correct:0,ex:"toLowerCase() returns a lowercase version of a string."},
+{q:"Which Python function displays output?",a:["show()","echo()","write()","print()"],correct:3,ex:"print() displays text or values."},
+{q:"Which Python function reads user input?",a:["readline() only","input()","scan()","getText()"],correct:1,ex:"input() reads a line of user input as a string."},
+{q:"Which character begins a Python comment?",a:["//","#","<!--","**"],correct:1,ex:"A hash symbol begins a Python single-line comment."},
+{q:"Which Python type stores whole numbers?",a:["str","list","int","dict"],correct:2,ex:"int represents integers."},
+{q:"Which Python type stores text?",a:["str","int","bool","set"],correct:0,ex:"str is Python's string type."},
+{q:"Which collection stores ordered, changeable items?",a:["tuple","list","frozenset","range only"],correct:1,ex:"A list is ordered and mutable."},
+{q:"Which Python collection is immutable?",a:["list","set","tuple","dict"],correct:2,ex:"A tuple cannot be modified after creation."},
+{q:"Which collection stores key-value pairs?",a:["list","tuple","set","dict"],correct:3,ex:"A dictionary maps keys to values."},
+{q:"Which Python keyword defines a function?",a:["def","function","fun","make"],correct:0,ex:"def begins a function definition."},
+{q:"Which keyword tests another condition after if?",a:["otherwise if","elif","else if only","when"],correct:1,ex:"elif adds another conditional branch in Python."},
+{q:"Which operator means exponentiation in Python?",a:["^","%","**","//"],correct:2,ex:"The ** operator raises a number to a power."},
+{q:"Which operator performs floor division in Python?",a:["/","%","**","//"],correct:3,ex:"// performs floor division."},
+{q:"Which function gives the length of a collection?",a:["len()","countall()","sizeOf()","length()"],correct:0,ex:"len() returns the number of items."},
+{q:"Which method adds an item to a Python list?",a:["push()","append()","attach()","insertEndOnly()"],correct:1,ex:"append() adds one item to the end of a list."},
+{q:"Which loop iterates over items in a sequence?",a:["repeat","loop","for","eachonly"],correct:2,ex:"A for loop iterates through an iterable."},
+{q:"Which keyword handles exceptions?",a:["catch","error","excepts","except"],correct:3,ex:"except handles matching exceptions in Python."},
+{q:"Which keyword imports a module?",a:["import","include","using","require"],correct:0,ex:"import makes a module available to your program."},
+{q:"Which value represents True or False in Python?",a:["int","bool","str","float"],correct:1,ex:"bool is Python's Boolean type."},
+{q:"Which Python operator tests membership?",a:["within","has","in","belongs"],correct:2,ex:"in checks whether a value occurs in a collection."},
+{q:"Which keyword creates a class in Python?",a:["object","struct","typeclass","class"],correct:3,ex:"class defines a class."},
+{q:"Which function converts a value to an integer?",a:["int()","str()","float()","bool()"],correct:0,ex:"int() converts compatible values to integers."},
+{q:"Which Python method changes text to uppercase?",a:["upperText()","upper()","toUpper()","capitalizeAll()"],correct:1,ex:"upper() returns a string in uppercase."},
+{q:"Which file mode is commonly used to read a file?",a:["w","a","r","x"],correct:2,ex:"The r mode opens a file for reading."},
+{q:"Which keyword sends a value back from a function?",a:["yieldonly","send","give","return"],correct:3,ex:"return ends a function call and supplies a value."},
+{q:"Which SQL command retrieves data?",a:["SELECT","GET","FETCH ALL SQL","READ"],correct:0,ex:"SELECT queries data from a database."},
+{q:"Which SQL command adds a new row?",a:["ADD ROW","INSERT INTO","NEW RECORD","APPEND TABLE"],correct:1,ex:"INSERT INTO adds rows to a table."},
+{q:"Which SQL clause filters rows?",a:["SORT BY","GROUP BY","WHERE","ORDER"],correct:2,ex:"WHERE filters rows using a condition."},
+{q:"Which SQL clause sorts results?",a:["SORT","ARRANGE","FILTER BY","ORDER BY"],correct:3,ex:"ORDER BY sorts query results."},
+{q:"Which SQL function counts rows?",a:["COUNT()","SUM()","TOTALROWS()","NUMBER()"],correct:0,ex:"COUNT() returns the number of rows or non-NULL values depending on its argument."},
+{q:"Which SQL command changes existing rows?",a:["CHANGE","UPDATE","MODIFY ROWS ONLY","ALTER DATA"],correct:1,ex:"UPDATE modifies existing records."},
+{q:"Which SQL command removes rows from a table?",a:["DROP DATABASE","ERASE TABLE","DELETE","CLEAR ALL"],correct:2,ex:"DELETE removes selected rows from a table."},
+{q:"Which constraint uniquely identifies each table row?",a:["FOREIGN KEY","NOT NULL","DEFAULT","PRIMARY KEY"],correct:3,ex:"A primary key uniquely identifies each row."},
+{q:"Which constraint links rows between tables?",a:["FOREIGN KEY","UNIQUE TEXT","CHECK ROW","LINK KEY"],correct:0,ex:"A foreign key references a key in another or the same table."},
+{q:"Which SQL keyword removes duplicate results?",a:["UNIQUE ONLY","DISTINCT","SINGLE","NO DUPLICATE"],correct:1,ex:"DISTINCT returns unique result rows."},
+{q:"Which join returns matching rows from both tables?",a:["FULL OUTER JOIN","CROSS JOIN","INNER JOIN","LEFT JOIN only"],correct:2,ex:"INNER JOIN returns rows that match the join condition."},
+{q:"Which SQL command creates a table?",a:["MAKE TABLE","NEW TABLE","BUILD TABLE","CREATE TABLE"],correct:3,ex:"CREATE TABLE defines a new table."},
+{q:"Which clause groups rows for aggregate calculations?",a:["GROUP BY","ORDER BY","WHERE","LIMIT"],correct:0,ex:"GROUP BY groups rows with matching values."},
+{q:"Which clause filters grouped results?",a:["WHERE","HAVING","ORDER BY","DISTINCT"],correct:1,ex:"HAVING filters groups after aggregation."},
+{q:"Which SQL value represents missing or unknown data?",a:["EMPTY","ZERO","NULL","FALSE"],correct:2,ex:"NULL represents missing or unknown data."},
+{q:"Which SQL operator matches a pattern?",a:["MATCHES","PATTERN","EQUALS","LIKE"],correct:3,ex:"LIKE checks text against a pattern."},
+{q:"Which SQL command changes a table's structure?",a:["ALTER TABLE","UPDATE TABLE DATA","CHANGE ROW","REPLACE TABLE"],correct:0,ex:"ALTER TABLE changes table definitions."},
+{q:"Which SQL command deletes a table definition?",a:["DELETE","DROP TABLE","REMOVE ROW","CLEAR"],correct:1,ex:"DROP TABLE removes a table and its definition."},
+{q:"Which keyword limits results in MySQL?",a:["TOP only","FIRST","LIMIT","STOP"],correct:2,ex:"LIMIT restricts how many rows are returned in MySQL."},
+{q:"Which SQL operator checks a range?",a:["RANGE","BETWEEN","WITHIN","INRANGE"],correct:1,ex:"BETWEEN checks whether a value lies within a range."},
+{q:"Which language is Java mainly known as?",a:["Markup language","Database language","Style language","Programming language"],correct:3,ex:"Java is a general-purpose programming language."},
+{q:"Which keyword declares a Java class?",a:["class","define","object","struct"],correct:0,ex:"The class keyword declares a class in Java."},
+{q:"Which method is the common Java program entry point?",a:["start()","main()","runMain()","launch()"],correct:1,ex:"Java applications commonly start at public static void main(String[] args)."},
+{q:"Which Java type stores true or false?",a:["int","String","boolean","char"],correct:2,ex:"boolean stores true or false."},
+{q:"Which Java type stores a single character?",a:["String","text","byteText","char"],correct:3,ex:"char represents a single UTF-16 code unit."},
+{q:"Which keyword creates an object in Java?",a:["new","make","create","object"],correct:0,ex:"new allocates an object and invokes its constructor."},
+{q:"Which keyword inherits a class in Java?",a:["inherits","extends","implements-class","superclass"],correct:1,ex:"extends declares class inheritance."},
+{q:"Which keyword implements an interface in Java?",a:["extends","inherits","implements","interfaceof"],correct:2,ex:"implements declares that a class implements an interface."},
+{q:"Which Java feature allows one method name with different parameter lists?",a:["Overriding only","Inheritance","Encapsulation","Overloading"],correct:3,ex:"Method overloading uses the same name with different parameter lists."},
+{q:"Which access modifier allows access from anywhere?",a:["public","private","protected","package-private"],correct:0,ex:"public members can be accessed wherever their enclosing type is accessible."},
+{q:"Which Java collection stores unique elements?",a:["ArrayList","HashSet","LinkedList","Array"],correct:1,ex:"HashSet stores unique elements."},
+{q:"Which keyword prevents a Java variable from being reassigned?",a:["static","void","final","constant"],correct:2,ex:"A final variable can be assigned only once."},
+{q:"Which Java construct handles exceptions?",a:["if-else","switch","loop","try-catch"],correct:3,ex:"try-catch handles exceptions."},
+{q:"Which Java operator compares primitive values for equality?",a:["==","=","equals only","==="],correct:0,ex:"== compares primitive values; object references require care."},
+{q:"Which method compares Java string contents?",a:["==","equals()","compareByMemory()","same()"],correct:1,ex:"equals() checks string content equality."},
+{q:"Which keyword refers to the current Java object?",a:["super","self","this","current"],correct:2,ex:"this refers to the current object instance."},
+{q:"Which keyword refers to a parent-class member?",a:["parent","base","this","super"],correct:3,ex:"super accesses superclass members or constructors."},
+{q:"Which Java type represents a sequence of characters?",a:["String","char","text","Characters"],correct:0,ex:"String represents text."},
+{q:"Which language commonly uses cout for output?",a:["Java","C++","Python","SQL"],correct:1,ex:"C++ commonly uses std::cout for console output."},
+{q:"Which header provides std::cout in C++?",a:["<stdio.h>","<iostream.h>","<iostream>","<console>"],correct:2,ex:"The standard iostream header declares stream input and output facilities."},
+{q:"Which symbol usually ends a C++ statement?",a:[".",";",":",","],correct:1,ex:"A semicolon ends most C++ statements."},
+{q:"Which C++ type stores whole numbers?",a:["word","number","integer","int"],correct:3,ex:"int is a built-in integer type."},
+{q:"Which C++ keyword declares a constant variable?",a:["const","fixed","constant","final"],correct:0,ex:"const prevents modification through that variable after initialization."},
+{q:"Which operator obtains an address in C++?",a:["*","&","%","!"],correct:1,ex:"The unary & operator obtains an object's address."},
+{q:"Which operator dereferences a pointer?",a:["&","-> only","*","::"],correct:2,ex:"The unary * operator accesses the object pointed to."},
+{q:"Which C++ feature bundles data and methods?",a:["Looping","Casting","Iteration","Class"],correct:3,ex:"A class can combine data members and member functions."},
+{q:"Which loop checks its condition before each iteration?",a:["while","do-while only","switch","class"],correct:0,ex:"A while loop checks the condition before running the body."},
+{q:"Which C++ keyword dynamically allocates an object?",a:["malloc-class","new","create","alloc"],correct:1,ex:"new allocates storage and initializes an object."},
+{q:"Which operator accesses a member through a pointer?",a:[".","::","->","&"],correct:2,ex:"The arrow operator accesses a member through a pointer."},
+{q:"Which header provides std::vector?",a:["<arraylist>","<listvector>","<collections>","<vector>"],correct:3,ex:"The vector header declares std::vector."},
+{q:"Which C++ construct is used to handle exceptions?",a:["try-catch","if-only","switch-case","loop-exit"],correct:0,ex:"try and catch handle exceptions."},
+{q:"Which function commonly starts a C++ program?",a:["start()","main()","begin()","run()"],correct:1,ex:"Execution starts in main in a hosted C++ program."},
+{q:"Which concept hides internal implementation details?",a:["Inheritance","Compilation","Encapsulation","Iteration"],correct:2,ex:"Encapsulation groups state and behavior and controls access."},
+{q:"Which algorithm finds an item in sorted data efficiently?",a:["Linear search always","Bubble sort","Depth-first search only","Binary search"],correct:3,ex:"Binary search repeatedly halves the sorted search interval."},
+{q:"Which data structure follows Last In, First Out?",a:["Stack","Queue","Tree","Graph"],correct:0,ex:"A stack removes the most recently added item first."},
+{q:"Which data structure follows First In, First Out?",a:["Stack","Queue","Heap only","Set"],correct:1,ex:"A queue removes the earliest added item first."},
+{q:"Which algorithm sorts by repeatedly swapping adjacent out-of-order items?",a:["Binary search","Merge search","Bubble sort","Hashing"],correct:2,ex:"Bubble sort repeatedly compares adjacent elements and swaps them when needed."},
+{q:"Which data structure stores key-value associations?",a:["Stack","Queue","Array only","Hash map"],correct:3,ex:"A hash map stores values indexed by keys."},
+{q:"What does an algorithm describe?",a:["Steps to solve a problem","A computer monitor","Only a programming language","A database table"],correct:0,ex:"An algorithm is a finite sequence of steps for solving a problem."},
+{q:"What is a variable?",a:["A fixed screen","A named storage location or binding","A web address","A database only"],correct:1,ex:"Variables refer to stored or computed values in a program."},
+{q:"What is a Boolean value?",a:["A decimal only","A text string","True or false","A list of numbers"],correct:2,ex:"Boolean values represent logical truth or falsity."},
+{q:"What is a syntax error?",a:["A slow computer","A wrong monitor setting","A network cable fault","Code that violates language grammar"],correct:3,ex:"A syntax error means code does not follow the language's grammar."},
+{q:"What is debugging?",a:["Finding and fixing program defects","Designing a logo","Deleting every variable","Installing a keyboard"],correct:0,ex:"Debugging helps identify, investigate and fix software errors."},
+{q:"What is a loop used for?",a:["Changing screen resolution","Repeating instructions","Storing a password only","Creating a file always"],correct:1,ex:"Loops repeat code while a condition or iteration rule applies."},
+{q:"What does a function help you do?",a:["Increase screen brightness","Remove all code","Reuse a named block of logic","Replace the operating system"],correct:2,ex:"Functions package reusable behavior."},
+{q:"What is an API?",a:["A programming keyboard","An image file type","A type of loop","A defined way for software to communicate"],correct:3,ex:"An API specifies how software components interact."},
+{q:"What does HTTP commonly enable?",a:["Communication between web clients and servers","Typing without a keyboard","Only local file editing","Changing CPU temperature"],correct:0,ex:"HTTP is an application-layer protocol used for web communication."},
+{q:"What is Git used for?",a:["Editing photos only","Version control","Making databases automatically","Designing computer chips"],correct:1,ex:"Git tracks changes to files and supports collaborative development."},
+{q:"What is a repository in Git?",a:["A browser tab","A keyboard shortcut","A project directory tracked by Git","A programming operator"],correct:2,ex:"A repository contains project files and their version history."},
+{q:"What does a successful test help verify?",a:["The code is always perfect","The computer is new","The internet is unlimited","Expected behavior for tested cases"],correct:3,ex:"Tests check whether software behaves as expected for selected cases."},
+{q:"Which practice helps protect a user's password?",a:["Store a salted password hash","Write it in a public file","Send it to every visitor","Use the same password everywhere"],correct:0,ex:"Systems should store secure password hashes, not plain-text passwords."},
+{q:"What is responsive web design?",a:["A website with only one fixed size","A layout that adapts to different screens","A website without CSS","A page with only images"],correct:1,ex:"Responsive design adapts layouts to screen sizes and device conditions."},
+{q:"What does accessibility aim to improve?",a:["Only animation speed","Only page colors","Usability for people with different abilities","The number of ads"],correct:2,ex:"Accessibility helps people with different abilities use digital products."},
+{q:"What is a database?",a:["A type of monitor","A programming loop","A CSS selector","An organized collection of data"],correct:3,ex:"A database organizes data for storage, retrieval and management."},
+{q:"What does CRUD stand for?",a:["Create, Read, Update, Delete","Copy, Run, Upload, Download","Code, Review, Use, Deploy","Create, Rename, Undo, Debug"],correct:0,ex:"CRUD describes the four common data operations."},
+{q:"What is a primary key used for?",a:["Styling a database","Uniquely identifying a record","Sorting images","Encrypting every column"],correct:1,ex:"A primary key uniquely identifies each row."},
+{q:"What is version control useful for?",a:["Increasing monitor size","Changing a keyboard layout","Tracking changes over time","Replacing all testing"],correct:2,ex:"Version control tracks edits and helps teams collaborate."},
+{q:"Which is a good first step when a program fails?",a:["Delete the project immediately","Ignore the error","Rewrite everything without checking","Read the error message and reproduce the issue"],correct:3,ex:"A clear reproduction and error message help narrow down the cause."}
+// 50 additional coding questions
+,
+{q:"Which HTML element embeds a video?",a:["<movie>","<video>","<media>","<play>"],correct:1,ex:"The video element embeds video content."},
+{q:"Which HTML attribute opens a link in a new tab when set to _blank?",a:["newtab","open","target","window"],correct:2,ex:"target='_blank' opens the linked page in a new browsing context."},
+{q:"Which HTML element represents a self-contained article?",a:["<article>","<section-title>","<content>","<storybox>"],correct:0,ex:"The article element represents self-contained content."},
+{q:"Which attribute connects a label to a form input ID?",a:["target","name","value","for"],correct:3,ex:"The label's for attribute matches the input's id."},
+{q:"Which input type hides typed characters?",a:["text","password","hidden-text","secure"],correct:1,ex:"The password input masks characters on screen."},
+{q:"Which HTML element creates a dropdown list?",a:["<dropdown>","<options>","<select>","<choose>"],correct:2,ex:"The select element provides a dropdown selection control."},
+{q:"Which CSS property controls the thickness of text?",a:["font-weight","text-boldness","font-thickness","weight"],correct:0,ex:"font-weight controls the thickness or weight of text."},
+{q:"Which CSS value makes an element a flex container?",a:["position:flex","display:flex","flex:display","layout:flex"],correct:1,ex:"display:flex makes an element a flex container."},
+{q:"Which CSS property aligns flex items along the main axis?",a:["align-content","text-align","justify-content","main-align"],correct:2,ex:"justify-content distributes items along the main axis."},
+{q:"Which CSS property aligns flex items along the cross axis?",a:["justify-content","place-text","cross-align","align-items"],correct:3,ex:"align-items aligns items on the cross axis."},
+{q:"Which CSS property changes an element's width?",a:["width","size-x","element-width","horizontal"],correct:0,ex:"The width property sets the content or box width according to box sizing."},
+{q:"Which CSS property adds a border?",a:["outline-only","border","edge-color","frame"],correct:1,ex:"The border property sets an element's border."},
+{q:"Which CSS position value keeps an element fixed to the viewport?",a:["absolute","sticky-only","fixed","relative"],correct:2,ex:"position:fixed positions an element relative to the viewport in common cases."},
+{q:"Which CSS selector targets every element?",a:["#","&","@", "*"],correct:3,ex:"The universal selector is an asterisk."},
+{q:"Which CSS property controls the space between lines of text?",a:["line-height","line-space","text-gap","font-gap"],correct:0,ex:"line-height sets the height of a line box."},
+{q:"Which JavaScript statement chooses between branches?",a:["repeat","if...else","import","console"],correct:1,ex:"if...else runs code based on a condition."},
+{q:"Which JavaScript method adds an event listener?",a:["addAction()","listenEvent()","addEventListener()","onEventAdd()"],correct:2,ex:"addEventListener registers a handler for an event."},
+{q:"Which JavaScript value means a variable has not been assigned a value?",a:["null","empty","false","undefined"],correct:3,ex:"A declared but unassigned variable has the value undefined."},
+{q:"Which method joins array items into a string?",a:["join()","combineText()","mergeString()","concatItemsOnly()"],correct:0,ex:"join() combines array elements into a string."},
+{q:"Which array method creates a new array by transforming each item?",a:["filter()","map()","find()","sort()"],correct:1,ex:"map() transforms each element and returns a new array."},
+{q:"Which array method keeps items that pass a test?",a:["map()","reduce()","filter()","join()"],correct:2,ex:"filter() returns an array of items passing a condition."},
+{q:"Which JavaScript keyword waits for a Promise inside an async function?",a:["wait","pause","defer","await"],correct:3,ex:"await pauses the async function until the Promise settles."},
+{q:"Which syntax creates a JavaScript arrow function?",a:["(x) => x","function => x","x :=> x","arrow(x)"],correct:0,ex:"The arrow token => defines an arrow function."},
+{q:"Which Python statement checks a condition?",a:["when","if","check","test"],correct:1,ex:"if runs a block when its condition is true."},
+{q:"Which Python function returns the largest item from values?",a:["top()","largest()","max()","high()"],correct:2,ex:"max() returns the largest item or argument."},
+{q:"Which Python function returns the smallest item?",a:["min()","low()","smallestValue()","least()"],correct:0,ex:"min() returns the smallest item or argument."},
+{q:"Which Python keyword creates an anonymous function?",a:["anon","lambda","defanon","func"],correct:1,ex:"lambda creates a small anonymous function."},
+{q:"Which Python collection removes duplicate values?",a:["list","tuple","set","string"],correct:2,ex:"A set stores distinct hashable elements."},
+{q:"Which Python method returns dictionary keys?",a:["getvalues()","itemsOnly()","allkeys()","keys()"],correct:3,ex:"keys() returns a view of dictionary keys."},
+{q:"Which Python keyword is used to create a generator value?",a:["yield","returnonly","generate","emit"],correct:0,ex:"yield produces a value from a generator function."},
+{q:"Which Python module is commonly used for mathematical functions?",a:["randomness","math","numbersOnly","calculate"],correct:1,ex:"The math module provides common mathematical functions."},
+{q:"Which Python keyword ensures cleanup after try/except?",a:["cleanup","finally","finish","always"],correct:1,ex:"finally runs cleanup code whether an exception occurs or not."},
+{q:"Which SQL command grants database privileges?",a:["ALLOW","PERMIT","GRANT","ACCESS"],correct:2,ex:"GRANT assigns privileges to database users or roles."},
+{q:"Which SQL command revokes privileges?",a:["REMOVE ACCESS","DENY ALL","UNGRANT","REVOKE"],correct:3,ex:"REVOKE removes previously granted privileges."},
+{q:"Which SQL aggregate calculates an average?",a:["AVG()","MEAN()","AVERAGE()","MID()"],correct:0,ex:"AVG() calculates the average of non-NULL values."},
+{q:"Which SQL aggregate calculates a total?",a:["COUNT()","SUM()","ADD()","TOTAL()"],correct:1,ex:"SUM() calculates the sum of numeric values."},
+{q:"Which SQL operator tests whether a value matches a list?",a:["BETWEEN","LIKE","IN","MATCH"],correct:2,ex:"IN tests whether a value equals one of the listed values."},
+{q:"Which SQL command adds a column to a table?",a:["INSERT COLUMN","UPDATE COLUMN","ADD FIELD","ALTER TABLE ... ADD COLUMN"],correct:3,ex:"ALTER TABLE can add a column to an existing table."},
+{q:"Which SQL clause combines rows from two tables using a condition?",a:["JOIN","UNION ALL only","MERGE TEXT","CONNECT ROW"],correct:0,ex:"JOIN combines rows from tables using a join condition."},
+{q:"Which Java keyword declares a constant-like field or class member?",a:["constant","final","fixed","immutable"],correct:1,ex:"final prevents reassignment of a variable after initialization."},
+{q:"Which Java loop is useful for iterating through an array?",a:["switch loop","if loop","for loop","class loop"],correct:2,ex:"A for loop can iterate through array indexes or elements."},
+{q:"Which Java collection is a resizable list?",a:["HashMap","HashSet","TreeMap","ArrayList"],correct:3,ex:"ArrayList implements a resizable list."},
+{q:"Which Java keyword handles a checked exception declaration?",a:["throws","throwing","exception","catching"],correct:0,ex:"throws declares exceptions a method may pass to its caller."},
+{q:"Which C++ keyword defines a function that belongs to a class?",a:["methodclass","member function","class-function","member function declaration"],correct:1,ex:"A member function is associated with a class."},
+{q:"Which C++ container stores elements in contiguous memory and can resize?",a:["std::map","std::set","std::vector","std::stack only"],correct:2,ex:"std::vector is a resizable sequence container with contiguous storage."},
+{q:"What does OOP stand for?",a:["Order of Processing","Output Oriented Program","Open Operating Protocol","Object-Oriented Programming"],correct:3,ex:"OOP organizes code around objects and their behavior."},
+{q:"Which testing checks a small isolated unit of code?",a:["Unit testing","Network testing","Load-only testing","Visual design"],correct:0,ex:"Unit testing checks a small unit such as a function or method."},
+{q:"What is a code comment mainly for?",a:["Making the program faster automatically","Explaining code to readers","Encrypting the source","Creating a database"],correct:1,ex:"Comments document intent and clarify code for readers."}
+];
+
+
+const totalLevels=250;
+let coins=0;
+let currentWorld=0;
+let currentLevel=1;
+let currentQuestion=null;
+let activeBot=0;
+let unlockedBots=[0];
+let cleared=new Set();
+let answering=false;
+let animationTimer=null;
+let nextTarget="levelPage";
+
+const worldThemes=["","ice","lava","space","desert","water","jungle","robotworld","sky","crystal"];
+const difficulties=["Easy","Medium","Hard","Expert","Master"];
+const obstacles=["🪨","🌵","🧊","🪵","💎"];
+
+function go(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ if(id==="worldPage")renderWorlds();
+ if(id==="levelPage")renderLevels();
+ if(id==="robotPage")renderRobots();
+ if(id==="statsPage")renderStats();
+}
+
+function updateCoins(){
+ document.getElementById("coinCount").textContent=coins;
+ document.getElementById("statCoins").textContent=coins;
+}
+
+function renderWorlds(){
+ const el=document.getElementById("worlds");
+ el.innerHTML="";
+ worlds.forEach((w,i)=>{
+  const start=i*25+1;
+  const count=[...cleared].filter(n=>n>=start&&n<start+25).length;
+  const b=document.createElement("button");
+  b.className="world";
+  b.style.setProperty("--c",w.color);
+  b.innerHTML=`<span class="muted">WORLD ${i+1}</span><span class="emoji">${w.emoji}</span><strong>${w.name}</strong><br><small>${count}/25 levels</small>`;
+  b.onclick=()=>{currentWorld=i;go("levelPage")};
+  el.appendChild(b);
+ });
+}
+
+function renderLevels(){
+ const w=worlds[currentWorld];
+ document.getElementById("worldHeading").textContent=`${w.emoji} ${w.name}`;
+ const done=[...cleared].filter(n=>n>=currentWorld*25+1&&n<currentWorld*25+26).length;
+ document.getElementById("worldInfo").textContent=`World ${currentWorld+1} • ${done}/25 completed`;
+ const el=document.getElementById("levels");
+ el.innerHTML="";
+ for(let n=1;n<=25;n++){
+  const global=currentWorld*25+n;
+  const b=document.createElement("button");
+  b.className="level"+(cleared.has(global)?" done":"");
+  const unlocked=global===1||cleared.has(global-1)||cleared.has(global);
+  b.disabled=!unlocked;
+  b.innerHTML=`<strong>${cleared.has(global)?"✓":n}</strong><small>${cleared.has(global)?"Complete":"Level"}</small>`;
+  b.onclick=()=>startLevel(currentWorld,n);
+  el.appendChild(b);
+ }
+}
+
+function startLevel(wi,li){
+ currentWorld=wi;currentLevel=li;answering=false;
+ if(animationTimer){clearInterval(animationTimer);animationTimer=null}
+ const global=wi*25+li;
+ const q=quizBank[global-1];
+ currentQuestion=q;
+ document.getElementById("worldTag").textContent=worlds[wi].emoji+" "+worlds[wi].name;
+ document.getElementById("diffTag").textContent=difficulties[Math.min(4,Math.floor((li-1)/5))];
+ document.getElementById("levelHeading").textContent=`Level ${li} / 25`;
+ document.getElementById("question").textContent=q.q;
+ document.getElementById("quizMessage").className="message";
+ document.getElementById("quizMessage").textContent="Choose the correct answer to move the robot to the flag.";
+ const answers=document.getElementById("answers");
+ answers.innerHTML="";
+ q.a.forEach((answer,index)=>{
+  const b=document.createElement("button");
+  b.className="answer";
+  b.textContent=String.fromCharCode(65+index)+". "+answer;
+  b.onclick=()=>checkAnswer(index,b);
+  answers.appendChild(b);
+ });
+ buildBoard();
+ go("gamePage");
+}
+
+function buildBoard(){
+ const board=document.getElementById("board");
+ board.innerHTML="";
+ const theme=worldThemes[currentWorld];
+ for(let r=0;r<6;r++){
+  for(let c=0;c<6;c++){
+   const tile=document.createElement("div");
+   tile.className="tile "+theme;
+   tile.id=`tile-${r}-${c}`;
+   if(r===0&&c===5){
+    tile.textContent="🏁";
+    tile.setAttribute("aria-label","Finish flag");
+   }else if(r===5&&c===0){
+    tile.textContent=bots[activeBot][1];
+    tile.id="robotTile";
+   }else if(r===0&&c>0&&c<5){
+    tile.textContent=["✨","⭐","💫","✨"][(c-1)%4];
+   }else if(c===0&&r>0&&r<5){
+    tile.textContent="🌿";
+   }else if((r+c+currentLevel)%7===0){
+    tile.classList.add("block");
+    tile.textContent=obstacles[(r+c)%obstacles.length];
+   }else{
+    tile.textContent="";
+   }
+   board.appendChild(tile);
+  }
+ }
+}
+
+function resetRobot(){
+ if(animationTimer){clearInterval(animationTimer);animationTimer=null}
+ buildBoard();
+ answering=false;
+ document.getElementById("quizMessage").className="message";
+ document.getElementById("quizMessage").textContent="Robot reset. Choose an answer to try again.";
+ document.querySelectorAll(".answer").forEach(b=>b.disabled=false);
+}
+
+function checkAnswer(index,button){
+ if(answering)return;
+ if(index!==currentQuestion.correct){
+  button.classList.add("wrong");
+  button.disabled=true;
+  const msg=document.getElementById("quizMessage");
+  msg.className="message bad";
+  msg.textContent="Not quite! Try another answer. Hint: "+currentQuestion.ex;
+  return;
+ }
+ answering=true;
+ document.querySelectorAll(".answer").forEach((b,i)=>{
+  b.disabled=true;
+  if(i===index)b.classList.add("correct");
+ });
+ const msg=document.getElementById("quizMessage");
+ msg.className="message good";
+ msg.textContent="Correct! "+currentQuestion.ex+" Robot moving to the flag...";
+ moveRobot();
+}
+
+function moveRobot(){
+ const robot=document.getElementById("robotTile");
+ if(!robot)return;
+ const path=[];
+ for(let r=5;r>=1;r--)path.push([r,0]);
+ for(let c=1;c<=5;c++)path.push([0,c]);
+ let step=0;
+ animationTimer=setInterval(()=>{
+  if(step>=path.length){
+   clearInterval(animationTimer);animationTimer=null;
+   completeLevel();
+   return;
+  }
+  const [r,c]=path[step];
+  const tile=document.getElementById(`tile-${r}-${c}`);
+  if(tile){
+   if(robot.parentNode)robot.textContent="";
+   tile.textContent=bots[activeBot][1];
+   tile.id="robotTile";
+   robot.id=`tile-${r}-${c}`;
+  }
+  step++;
+ },180);
+}
+// CodeBot Adventures - Win Music
+function playWinMusic() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+
+    const audio = new AudioCtx();
+
+    audio.resume().then(() => {
+      const master = audio.createGain();
+      master.gain.value = 0.7;
+      master.connect(audio.destination);
+
+      const notes = [
+        [523.25, 0],
+        [659.25, 0.2],
+        [783.99, 0.4],
+        [1046.5, 0.6],
+        [783.99, 0.9],
+        [1046.5, 1.1]
+      ];
+
+      notes.forEach(([frequency, delay]) => {
+        const oscillator = audio.createOscillator();
+        const volume = audio.createGain();
+        const start = audio.currentTime + delay;
+
+        oscillator.type = "triangle";
+        oscillator.frequency.value = frequency;
+
+        volume.gain.setValueAtTime(0.001, start);
+        volume.gain.linearRampToValueAtTime(0.5, start + 0.04);
+        volume.gain.exponentialRampToValueAtTime(
+          0.001, start + 0.35
+        );
+
+        oscillator.connect(volume);
+        volume.connect(master);
+
+        oscillator.start(start);
+        oscillator.stop(start + 0.36);
+      });
+
+      setTimeout(() => audio.close(), 2200);
+    });
+  } catch (error) {
+    console.log("Win music could not play:", error);
+  }
+}
+
+function completeLevel(){
+playWinMusic();
+ const global=currentWorld*25+currentLevel;
+ let reward=0;
+ if(!cleared.has(global)){
+  cleared.add(global);
+  coins+=10;
+  reward=10;
+ }
+ let worldBonus=0;
+ if(currentLevel===25){
+  const count=[...cleared].filter(n=>n>currentWorld*25&&n<=(currentWorld+1)*25).length;
+  if(count===25){
+   worldBonus=500;
+   coins+=worldBonus;
+  }
+ }
+ updateCoins();
+ renderLevels();
+ renderWorlds();
+ document.getElementById("modalEmoji").textContent="🏆";
+ document.getElementById("modalTitle").textContent="Level Complete!";
+ document.getElementById("modalText").textContent=`You earned ${reward} coins!`+(worldBonus?` World completed: +${worldBonus} bonus coins!`:"");
+ nextTarget=currentLevel<25?"nextLevel":"worldPage";
+ document.getElementById("modalNext").textContent=currentLevel<25?"Next Level →":"Choose World →";
+ document.getElementById("modal").classList.add("show");
+}
+
+function closeModal(){
+ document.getElementById("modal").classList.remove("show");
+ go("levelPage");
+}
+
+function nextAction(){
+ document.getElementById("modal").classList.remove("show");
+ if(nextTarget==="nextLevel")startLevel(currentWorld,currentLevel+1);
+ else go("worldPage");
+}
+
+function renderRobots(){
+ const el=document.getElementById("robots");
+ el.innerHTML="";
+ document.getElementById("activeName").textContent=bots[activeBot][0];
+ document.getElementById("activeEmoji").textContent=bots[activeBot][1];
+ bots.forEach((bot,i)=>{
+  const unlocked=unlockedBots.includes(i);
+  const card=document.createElement("div");
+  card.className="robot";
+  card.innerHTML=`<div class="emoji">${bot[1]}</div><strong>${bot[0]}</strong><small>${bot[3]}</small><small>${unlocked?"Unlocked":bot[2]+" coins"}</small>`;
+  const b=document.createElement("button");
+  b.className="btn "+(unlocked?"alt":"");
+  b.textContent=i===activeBot?"Selected":unlocked?"Select":"Unlock";
+  b.onclick=()=>{
+   if(unlocked){
+    activeBot=i;
+    renderRobots();
+   }else if(coins>=bot[2]){
+    coins-=bot[2];
+    unlockedBots.push(i);
+    activeBot=i;
+    updateCoins();
+    renderRobots();
+   }else{
+    b.textContent="Need more coins";
+   }
+  };
+  card.appendChild(b);
+  el.appendChild(card);
+ });
+}
+
+function renderStats(){
+ document.getElementById("statCoins").textContent=coins;
+ document.getElementById("statLevels").textContent=cleared.size+" / 250";
+ const completed=worlds.filter((w,i)=>[...cleared].filter(n=>n>i*25&&n<=(i+1)*25).length===25).length;
+ document.getElementById("statWorlds").textContent=completed+" / 10";
+}
+
+updateCoins();
+renderWorlds();
+renderLevels();
+renderRobots();
+renderStats();
+</script>
+</body>
+</html>

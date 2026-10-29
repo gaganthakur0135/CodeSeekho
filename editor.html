@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Editor | CodeSeekho</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#030b20;color:#edf6ff;min-height:100vh}
+header{padding:16px 5%;background:#050d24;border-bottom:1px solid #16436a;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.logo{font-size:25px;font-weight:bold;color:#00e8c0;text-decoration:none}
+nav{display:flex;gap:20px;flex-wrap:wrap}
+nav a{color:#d8e6f8;text-decoration:none}
+nav a:hover{color:#00e8c0}
+.container{max-width:1250px;margin:auto;padding:28px 20px}
+h1{font-size:34px;margin-bottom:8px}
+.highlight{color:#00e8c0}
+.description{color:#b7c9e0;margin-bottom:24px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{background:#0a1c36;color:#dceaff;border:1px solid #16436a;border-radius:8px;padding:11px 18px;cursor:pointer}
+.tab.active{background:#073b42;color:#00e8c0;border-color:#00bca5}
+button{font-weight:bold}
+.run{background:linear-gradient(100deg,#00e8bd,#00a5ff);color:#00172a;border:0;border-radius:8px;padding:12px 20px;cursor:pointer}
+.workspace{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel{border:1px solid #16436a;background:#07162d;border-radius:13px;overflow:hidden;min-width:0}
+.panel-title{padding:14px 16px;background:#0a1c36;border-bottom:1px solid #16436a;font-weight:bold}
+.panel-title span{color:#00e8c0}
+textarea{display:block;width:100%;height:380px;resize:vertical;background:#020918;color:#a2e7ff;border:0;outline:0;padding:18px;font:14px/1.8 Consolas,monospace;tab-size:2}
+iframe{display:block;width:100%;height:380px;background:white;border:0}
+.status{color:#9eb8d5;font-size:13px;margin-top:14px}
+.hint{margin-top:20px;padding:16px;border:1px solid #16436a;background:#07162d;border-radius:10px;color:#c4d6ec}
+footer{text-align:center;padding:22px;border-top:1px solid #16436a;color:#9eb8d5;font-size:13px;margin-top:30px}
+@media(max-width:750px){.workspace{grid-template-columns:1fr}h1{font-size:28px}textarea,iframe{height:300px}}
+</style>
+</head>
+
+<body>
+<header>
+  <a class="logo" href="index.html">&lt;/&gt; CodeSeekho</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="html.html">HTML Tutorial</a>
+  </nav>
+</header>
+
+<main class="container">
+  <h1>Online <span class="highlight">Code Editor</span></h1>
+  <p class="description">Write your code, run it and see your webpage instantly.</p>
+
+  <div class="toolbar">
+    <div class="tabs">
+      <button class="tab active" data-lang="html">HTML</button>
+      <button class="tab" data-lang="css">CSS</button>
+      <button class="tab" data-lang="js">JavaScript</button>
+    </div>
+    <button class="run" id="runButton">▶ Run Code</button>
+  </div>
+
+  <div class="workspace">
+    <section class="panel">
+      <div class="panel-title">✎ Code Editor — <span id="languageName">HTML</span></div>
+      <textarea id="codeInput" spellcheck="false" aria-label="Code editor"></textarea>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title">◉ Live Output</div>
+      <iframe id="output" title="Live code output" sandbox="allow-scripts"></iframe>
+    </section>
+  </div>
+
+  <p class="status" id="status" aria-live="polite">Ready. Select a tab, edit your code and click Run Code.</p>
+
+  <div class="hint">
+    <strong class="highlight">How to use</strong>
+    <p style="margin-top:8px">1. Choose HTML, CSS or JavaScript.</p>
+    <p>2. Write or change the sample code.</p>
+    <p>3. Click Run Code to update the preview.</p>
+    <p style="margin-top:8px">Tip: Your HTML, CSS and JavaScript are combined to preview a webpage. This starter editor runs in your browser.</p>
+  </div>
+</main>
+
+<footer>© 2026 CodeSeekho — Learn Coding for a Better Future.</footer>
+
+<script>
+const samples = {
+  html: `<h1>Hello, Coder!</h1>
+<p>Welcome to CodeSeekho.</p>
+<button onclick="document.getElementById('message').textContent='It works!'">Click Me</button>
+<p id="message"></p>`,
+
+  css: `h1 {
+  color: #008f83;
+  font-family: Arial;
+}
+p {
+  font-size: 18px;
+}
+button {
+  background: #00d9ad;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}`,
+
+  js: `document.getElementById("heading").textContent = "JavaScript Works!";
+document.getElementById("message").textContent =
+  "You have run your first JavaScript code.";`
+};
+
+let currentLanguage = "html";
+const codeInput = document.getElementById("codeInput");
+const output = document.getElementById("output");
+const status = document.getElementById("status");
+
+function buildPage() {
+  const value = codeInput.value;
+
+  let html = samples.html;
+  let css = samples.css;
+  let js = "";
+
+  if (currentLanguage === "html") {
+    html = value;
+  } else if (currentLanguage === "css") {
+    css = value;
+  } else {
+    js = value;
+  }
+
+  const safeCss = css.replace(/<\/style/gi, "<\\/style");
+  const safeJs = js.replace(/<\/script/gi, "<\\/script");
+
+  output.srcdoc = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body { font-family: Arial, sans-serif; padding: 20px; color: #14213d; }
+${safeCss}
+</style>
+</head>
+<body>
+<h1 id="heading">CodeSeekho Preview</h1>
+${html}
+<script>
+try {
+${safeJs}
+} catch (error) {
+document.body.insertAdjacentHTML("beforeend",
+'<pre style="color:red">JavaScript error: ' + error.message + '</pre>');
+}
+<\/script>
+</body>
+</html>`;
+
+  status.textContent = "Preview updated successfully.";
+}
+
+document.querySelectorAll(".tab").forEach(function(button) {
+  button.addEventListener("click", function() {
+    currentLanguage = button.dataset.lang;
+    codeInput.value = samples[currentLanguage];
+
+    document.querySelectorAll(".tab").forEach(function(tab) {
+      tab.classList.toggle("active", tab === button);
+    });
+
+    document.getElementById("languageName").textContent =
+      currentLanguage === "js" ? "JavaScript" :
+      currentLanguage.toUpperCase();
+
+    status.textContent = "Editing " + document.getElementById("languageName").textContent + ".";
+  });
+});
+
+document.getElementById("runButton").addEventListener("click", buildPage);
+
+codeInput.value = samples.html;
+buildPage();
+</script>
+</body>
+</html>

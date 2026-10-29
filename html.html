@@ -1,0 +1,847 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Learn HTML from beginner to advanced with 50 easy lessons, code examples and practice using CodeSeekho.">
+<title>HTML Tutorial | CodeSeekho</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#030b20;--panel:#081a35;--border:#16436a;--accent:#00e8c0;--text:#edf6ff;--muted:#bdcde2}
+html{scroll-behavior:smooth;scroll-padding-top:20px}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+a{color:inherit;text-decoration:none}
+header{background:#050d24;border-bottom:1px solid var(--border);padding:15px 5%;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.logo{font-size:24px;font-weight:bold;color:var(--accent)}
+nav{display:flex;gap:20px;flex-wrap:wrap;font-size:14px}
+nav a:hover,aside a:hover{color:var(--accent)}
+.layout{display:grid;grid-template-columns:255px minmax(0,1fr);max-width:1450px;margin:auto;min-height:85vh}
+aside{background:#061329;border-right:1px solid var(--border);padding:20px 12px;align-self:start;position:sticky;top:0;max-height:100vh;overflow-y:auto}
+aside h3{color:var(--accent);padding:0 10px;margin-bottom:12px}
+aside a{display:block;padding:7px 10px;border-radius:7px;color:var(--muted);font-size:13px;margin:2px 0}
+aside a:hover,aside a.active{background:#07354a;color:var(--accent)}
+main{padding:28px;min-width:0}
+.tag{display:inline-block;color:var(--accent);border:1px solid #087c86;border-radius:20px;padding:4px 12px;font-size:12px;letter-spacing:1px}
+h1{font-size:clamp(28px,4vw,40px);line-height:1.25;margin:15px 0}
+h2{font-size:24px;color:var(--accent);line-height:1.4}
+h3{font-size:17px;margin-bottom:8px}
+p{color:var(--muted);margin:10px 0}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:22px;margin:18px 0;scroll-margin-top:15px}
+.progress-track{height:9px;background:#020918;border-radius:10px;overflow:hidden;margin-top:10px}
+#progressFill{height:100%;width:2%;background:var(--accent);transition:width .25s}
+.progress-row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#020918;border:1px solid #17385c;padding:16px;border-radius:9px;overflow-x:auto;color:#8de9ff;margin:12px 0;font:13px/1.7 Consolas,monospace}
+code{color:#77e8ff}
+button{background:linear-gradient(100deg,#00e8bd,#009dff);border:0;border-radius:8px;padding:11px 17px;color:#00172a;font-weight:bold;cursor:pointer}
+button:hover{filter:brightness(1.08)}
+button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid white;outline-offset:3px}
+button:disabled{opacity:.4;cursor:not-allowed}
+.lesson-nav{display:flex;justify-content:space-between;gap:12px;margin:22px 0}
+.note{border-left:3px solid var(--accent);padding:10px 14px;background:#061329;border-radius:5px;margin:14px 0;color:var(--muted)}
+#editor{width:100%;min-height:190px;background:#020918;color:#8de9ff;border:1px solid var(--border);border-radius:9px;padding:14px;font:14px/1.7 Consolas,monospace;resize:vertical}
+#preview{width:100%;height:220px;background:white;border:1px solid var(--border);border-radius:9px;margin-top:10px}
+footer{text-align:center;border-top:1px solid var(--border);padding:22px;color:#aebfd9}
+@media(max-width:760px){
+ .layout{grid-template-columns:1fr}
+ aside{position:relative;top:auto;max-height:310px;border-right:0;border-bottom:1px solid var(--border)}
+ main{padding:18px 13px}
+ .panel{padding:16px}
+ nav{gap:12px}
+}
+</style>
+</head>
+
+<body>
+<header>
+  <a class="logo" href="index.html">&lt;/&gt; CodeSeekho</a>
+  <nav aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <a href="#lessons">Lessons</a>
+    <a href="#editor-panel">Online Editor</a>
+  </nav>
+</header>
+
+<div class="layout">
+  <aside id="sidebar" aria-label="HTML lesson navigation">
+    <h3>HTML Tutorial</h3>
+    <div id="lessonLinks"></div>
+  </aside>
+
+  <main>
+    <p style="margin:0 0 14px"><a href="index.html" style="color:var(--accent)">← Back to Home</a></p>
+    <span class="tag">BEGINNER COURSE</span>
+    <h1>Learn <span style="color:var(--accent)">HTML</span></h1>
+    <p>Learn how webpages are built with simple explanations, practical examples and projects. Start with the basics and gradually explore more HTML features.</p>
+
+    <section class="panel" id="progress-panel">
+      <div class="progress-row">
+        <span id="lessonProgress">Lesson 1 of 50</span>
+        <span id="progressPercent">2% complete</span>
+      </div>
+      <div class="progress-track" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="2" id="progressBar">
+        <div id="progressFill"></div>
+      </div>
+    </section>
+
+    <section id="lessons" class="panel">
+      <h2 id="lessonTitle">1. What is HTML?</h2>
+      <p id="lessonDefinition"></p>
+      <div id="lessonExplanation"></div>
+      <h3>Example Code</h3>
+      <pre><code id="lessonCode"></code></pre>
+      <div class="note" id="lessonTip"></div>
+    </section>
+
+    <section class="panel" id="editor-panel">
+      <h2>Try It Yourself</h2>
+      <p>Change the HTML code below and click Run Code to see the result. Your code runs in the preview area.</p>
+      <label for="editor">Your HTML code</label>
+      <textarea id="editor" spellcheck="false"><h1>Hello World!</h1>
+<p>Welcome to CodeSeekho.</p>
+<button>Click Me</button></textarea>
+      <p><button type="button" onclick="runCode()">▶ Run Code</button></p>
+      <h3>Output Preview</h3>
+      <iframe id="preview" title="HTML code output" sandbox=""></iframe>
+    </section>
+
+    <div class="lesson-nav" id="bottomLessonNav">
+      <button type="button" id="backButton" onclick="previousLesson()">← Back</button>
+      <button type="button" id="nextButton" onclick="nextLesson()">Next Lesson →</button>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <p>© 2026 CodeSeekho — Learn Coding for a Better Future.</p>
+</footer>
+
+<script>
+const lessons = [
+{
+title:"What is HTML?",
+definition:"HTML stands for HyperText Markup Language. It is the standard markup language used to structure content on web pages.",
+explanation:"HTML organizes content such as headings, paragraphs, images and links. Browsers read HTML and display the page. HTML describes structure; CSS is generally used for styling and JavaScript for interactive behaviour.",
+code:`<h1>My First Website</h1>
+<p>I am learning HTML.</p>`,
+tip:"HTML is a markup language, not a programming language."
+},
+{
+title:"Basic HTML Structure",
+definition:"A basic HTML document contains a document declaration, an html element, a head section and a body section.",
+explanation:"The head contains information about the page. The body contains the content visitors see. The DOCTYPE declaration tells the browser to use modern HTML standards mode.",
+code:`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Website</title>
+</head>
+<body>
+  <h1>Hello World!</h1>
+  <p>My first webpage.</p>
+</body>
+</html>`,
+tip:"Save a webpage with the .html extension and open it in a browser."
+},
+{
+title:"HTML Headings",
+definition:"HTML headings use the h1 to h6 elements to represent headings at six levels.",
+explanation:"Use h1 for the main page heading and lower-level headings to organize sections. Choose headings according to their meaning rather than just their size.",
+code:`<h1>Main Heading</h1>
+<h2>Section Heading</h2>
+<h3>Smaller Section</h3>
+<h4>Heading Level 4</h4>
+<h5>Heading Level 5</h5>
+<h6>Heading Level 6</h6>`,
+tip:"Use headings in a logical order so people and assistive technologies can understand the page."
+},
+{
+title:"HTML Paragraphs",
+definition:"The p element represents a paragraph of text.",
+explanation:"Browsers normally display paragraphs as separate blocks with spacing. Use a new p element for each paragraph instead of using many spaces to arrange text.",
+code:`<p>Welcome to CodeSeekho.</p>
+<p>HTML is used to structure webpages.</p>`,
+tip:"Browsers collapse repeated spaces in ordinary HTML text."
+},
+{
+title:"HTML Links",
+definition:"The a element creates a hyperlink to another page, file, email address or location.",
+explanation:"The href attribute specifies the destination. Link text should explain where the link goes so visitors know what to expect.",
+code:`<a href="https://example.com">
+  Visit Example
+</a>
+
+<a href="about.html">About Us</a>`,
+tip:"Use meaningful link text instead of vague phrases when possible."
+},
+{
+title:"HTML Images",
+definition:"The img element embeds an image in a webpage.",
+explanation:"The src attribute points to the image file. The alt attribute provides a text alternative for people who cannot see the image or when the image cannot load.",
+code:`<img src="flower.jpg"
+     alt="A red flower"
+     width="250">`,
+tip:"Keep the image file in the correct folder and use useful alt text."
+},
+{
+title:"HTML Lists",
+definition:"HTML lists group related items. Common types include unordered lists, ordered lists and description lists.",
+explanation:"The ul element creates a bulleted list, while ol creates a numbered list. Each list item in these lists is placed inside an li element.",
+code:`<ul>
+  <li>HTML</li>
+  <li>CSS</li>
+</ul>
+
+<ol>
+  <li>Learn HTML</li>
+  <li>Build a page</li>
+</ol>`,
+tip:"Choose the list type according to whether the order matters."
+},
+{
+title:"HTML Tables",
+definition:"The table element organizes related data into rows and columns.",
+explanation:"Use tr for a row, th for a header cell and td for a data cell. Tables are best for tabular data, not for laying out an entire webpage.",
+code:`<table>
+  <tr>
+    <th>Name</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>Aman</td>
+    <td>20</td>
+  </tr>
+</table>`,
+tip:"For accessible tables, use appropriate headings and consider a caption."
+},
+{
+title:"HTML Attributes",
+definition:"Attributes provide additional information or settings for an HTML element.",
+explanation:"Attributes are usually written in the opening tag as name-value pairs. Common examples include href for links, src for images and alt for image descriptions.",
+code:`<a href="https://example.com">
+  Visit Example
+</a>
+
+<img src="cat.jpg"
+     alt="A cat"
+     width="200">`,
+tip:"Quote attribute values, especially when they contain spaces."
+},
+{
+title:"HTML Text Formatting",
+definition:"HTML formatting elements describe text with special meaning, such as importance, emphasis or highlighted content.",
+explanation:"The strong element indicates importance and em indicates emphasis. The b and i elements can be used when their specific meaning fits, but should not replace semantic elements without thought.",
+code:`<strong>Important text</strong>
+<em>Emphasized text</em>
+<mark>Highlighted text</mark>
+<small>Small print</small>
+<del>Removed text</del>
+<ins>Added text</ins>`,
+tip:"Use elements for their meaning, not only for their visual appearance."
+},
+{
+title:"HTML Comments",
+definition:"HTML comments are notes in source code that browsers do not display as normal page content.",
+explanation:"Comments help developers explain sections of a document or temporarily note code. They are still visible to anyone who views the page source, so never put passwords or secrets in comments.",
+code:`<!-- This is a comment -->
+<h1>Welcome</h1>
+<!-- Add more content here -->
+<p>Keep practising HTML.</p>`,
+tip:"A comment starts with <!-- and ends with -->."
+},
+{
+title:"Block and Inline Elements",
+definition:"Block elements generally start on a new line, while inline elements usually flow within the surrounding text.",
+explanation:"Elements such as div and p are commonly block-level. Elements such as span and a are commonly inline. CSS can change how an element is displayed.",
+code:`<div>
+  This is a block container.
+</div>
+<p>This is a paragraph.</p>
+<p>Learn <span>HTML</span> today.</p>
+<a href="about.html">About</a>`,
+tip:"Use div and span when a generic container is appropriate; prefer meaningful elements when available."
+},
+{
+title:"HTML Classes and IDs",
+definition:"The class attribute groups elements under a reusable name. The id attribute identifies a unique element within a document.",
+explanation:"CSS and JavaScript can use classes and IDs to find or style elements. A class can be used on many elements, while an ID should be unique on the page.",
+code:`<p class="highlight">First message</p>
+<p class="highlight">Second message</p>
+<h2 id="about">About Us</h2>`,
+tip:"An ID can also be used as a link destination, such as #about."
+},
+{
+title:"HTML Forms",
+definition:"An HTML form groups controls that allow users to submit information.",
+explanation:"Forms often contain labels, input fields and a submit button. The action and method attributes can configure how a form submits data, but a working server is needed to process it.",
+code:`<form action="/submit" method="post">
+  <label for="username">Name:</label>
+  <input id="username" name="username"
+         type="text" required>
+  <button type="submit">Submit</button>
+</form>`,
+tip:"A form shown in a local HTML file will not submit successfully to a real server unless that endpoint exists."
+},
+{
+title:"HTML Input Types",
+definition:"The input element creates form controls, and its type attribute determines the kind of data or control displayed.",
+explanation:"Common types include text, email, password, number, date, checkbox and radio. Selecting an appropriate type can improve browser validation and make forms easier to use.",
+code:`<input type="text" placeholder="Your name">
+<input type="email" placeholder="Your email">
+<input type="password" placeholder="Password">
+<input type="number" min="1" max="100">
+<input type="date">`,
+tip:"Always add an accessible label for a form field."
+},
+{
+title:"HTML Buttons",
+definition:"The button element creates a clickable control that can perform an action or submit a form.",
+explanation:"A button inside a form defaults to a submit button unless another type is specified. Use type=button for a button that should not submit a form.",
+code:`<button type="button">Click Me</button>
+<button type="submit">Submit Form</button>
+<button type="reset">Reset Form</button>`,
+tip:"A button needs JavaScript or form behaviour to perform an action."
+},
+{
+title:"HTML Semantic Elements",
+definition:"Semantic HTML elements describe the purpose of a section of a webpage.",
+explanation:"Elements such as header, nav, main, article, section and footer help organize content. Clear structure improves maintainability and can help assistive technology interpret a page.",
+code:`<header>Website Header</header>
+<nav>Navigation links</nav>
+<main>
+  <article>
+    <h1>Article Title</h1>
+    <p>Article content.</p>
+  </article>
+</main>
+<footer>Website Footer</footer>`,
+tip:"Use one main element for the page's primary content."
+},
+{
+title:"HTML Audio and Video",
+definition:"The audio and video elements embed sound and video media in a webpage.",
+explanation:"The controls attribute displays built-in playback controls. Source files must exist and use a supported format for the media to play.",
+code:`<audio controls>
+  <source src="song.mp3" type="audio/mpeg">
+  Your browser does not support audio.
+</audio>
+
+<video controls width="320">
+  <source src="movie.mp4" type="video/mp4">
+  Your browser does not support video.
+</video>`,
+tip:"Use captions or transcripts where appropriate to make media more accessible."
+},
+{
+title:"HTML Iframes",
+definition:"The iframe element embeds another HTML page or document inside the current webpage.",
+explanation:"The src attribute specifies the page to embed. Some websites prevent embedding through security policies. Always give an iframe a descriptive title.",
+code:`<iframe
+  src="https://example.com"
+  title="Example website"
+  width="400"
+  height="250">
+</iframe>`,
+tip:"Only embed content from sources you trust."
+},
+{
+title:"HTML Entities and Symbols",
+definition:"HTML character references display reserved characters and special symbols.",
+explanation:"Characters such as the less-than sign can be confused with HTML markup. Character references such as &amp;lt; and &amp;amp; let you display those characters as text.",
+code:`<p>Less than: &lt;</p>
+<p>Greater than: &gt;</p>
+<p>Ampersand: &amp;</p>
+<p>Copyright: &copy;</p>
+<p>Non-breaking space: &nbsp;</p>`,
+tip:"Character references begin with & and normally end with a semicolon."
+},
+{
+title:"HTML Head and Meta Tags",
+definition:"The head element contains document information and linked resources that are not ordinary page content.",
+explanation:"The title element sets the browser tab title. Meta elements can declare character encoding, viewport behaviour and a description for the page.",
+code:`<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+        content="Learn HTML basics">
+  <title>My Website</title>
+</head>`,
+tip:"The title is important for browser tabs and search result presentation."
+},
+{
+title:"Mini Project: Profile Page",
+definition:"A profile page introduces a person through headings, text, lists and links.",
+explanation:"This small project combines several HTML elements. Customize the content to practise arranging related information in a complete page.",
+code:`<h1>My Profile</h1>
+<p>Hello! I am learning HTML.</p>
+<h2>My Goals</h2>
+<ul>
+  <li>Learn HTML</li>
+  <li>Build websites</li>
+</ul>
+<a href="https://example.com">Example Link</a>`,
+tip:"Try adding an image and a second section of information."
+},
+{
+title:"Line Breaks and Horizontal Lines",
+definition:"The br element inserts a line break, while the hr element represents a thematic break between sections of content.",
+explanation:"Use br when a line break is part of the content, such as an address or poem. Use hr to indicate a meaningful change in topic, not merely to decorate a page.",
+code:`<p>Hello<br>Students!</p>
+<hr>
+<p>Welcome to HTML.</p>`,
+tip:"The br and hr elements are void elements and do not have closing tags."
+},
+{
+title:"HTML Quotations",
+definition:"HTML provides elements for marking short quotations and longer quoted sections.",
+explanation:"The q element represents a short quotation within a sentence. The blockquote element represents a longer quotation, often displayed as a separate block.",
+code:`<p>My teacher said
+  <q>Keep learning!</q>
+</p>
+
+<blockquote>
+  Practice helps build confidence.
+</blockquote>`,
+tip:"When needed, use the cite attribute to identify the source of a quotation."
+},
+{
+title:"HTML Styles",
+definition:"The style attribute applies CSS declarations directly to an individual HTML element.",
+explanation:"Inline styles can be useful for quick demonstrations. For larger websites, an external stylesheet is usually easier to maintain because the same styles can be reused.",
+code:`<h1 style="color:blue;">Hello!</h1>
+<p style="font-size:20px;">Learn HTML.</p>
+<p style="background-color:yellow;">
+  Welcome
+</p>`,
+tip:"CSS controls presentation; HTML describes the content and its structure."
+},
+{
+title:"HTML Colors",
+definition:"CSS colors define the foreground or background color of elements.",
+explanation:"Colors can be expressed using names, hexadecimal values, RGB values and other CSS color formats. Choose colors with enough contrast so text remains readable.",
+code:`<p style="color:red;">Red text</p>
+<p style="color:#008080;">Teal text</p>
+<p style="background-color:lightblue;">
+  Blue background
+</p>`,
+tip:"Check text contrast, especially for small text."
+},
+{
+title:"HTML File Paths",
+definition:"A file path tells the browser where a linked file or resource is located.",
+explanation:"A relative path is resolved from the current document's location. Files in a subfolder need that folder name in the path. File names and folder names must match.",
+code:`<img src="photo.jpg" alt="My photo">
+<img src="images/photo.jpg" alt="My photo">
+<a href="about.html">About Us</a>`,
+tip:"Keep your HTML file and supporting images organized in predictable folders."
+},
+{
+title:"HTML Favicon",
+definition:"A favicon is a small icon associated with a website, often shown in a browser tab or bookmark.",
+explanation:"A link element in the document head tells the browser where to find the icon file. The image file must exist at the specified path.",
+code:`<link rel="icon"
+      href="favicon.png"
+      type="image/png">`,
+tip:"Place the link element inside head, not inside the visible body content."
+},
+{
+title:"HTML Computer Code",
+definition:"HTML provides elements for marking computer code, keyboard input and sample output.",
+explanation:"The code element marks a code fragment. The kbd element represents user input, and samp represents sample output. The pre element can preserve whitespace and line breaks.",
+code:`<p>Use <code>print()</code> in Python.</p>
+<p>Press <kbd>Ctrl</kbd> + <kbd>S</kbd>.</p>
+<p>Output: <samp>Hello World</samp></p>
+
+<pre>
+Line one
+  Indented line
+</pre>`,
+tip:"Use pre with code when you want to display a formatted code example."
+},
+{
+title:"HTML Figure and Caption",
+definition:"The figure element groups self-contained content, such as an image or diagram, with an optional caption.",
+explanation:"The figcaption element provides a caption for the figure. This is useful when an image needs a visible explanation or attribution.",
+code:`<figure>
+  <img src="flower.jpg"
+       alt="A flower"
+       width="200">
+  <figcaption>A beautiful flower.</figcaption>
+</figure>`,
+tip:"Use a meaningful alt attribute for images that convey information."
+},
+{
+title:"HTML Details and Summary",
+definition:"The details element creates a disclosure widget that users can open or close.",
+explanation:"The summary element provides the visible label for the disclosure. This can be useful for FAQs or additional information that does not need to be visible all the time.",
+code:`<details>
+  <summary>What is HTML?</summary>
+  <p>HTML structures webpage content.</p>
+</details>`,
+tip:"Try clicking the question in the output to open and close the answer."
+},
+{
+title:"HTML Dropdown Lists",
+definition:"The select element creates a dropdown control containing a set of option elements.",
+explanation:"Each option represents a choice. A label helps explain the purpose of the dropdown, and the name attribute identifies the field when a form is submitted.",
+code:`<label for="course">Choose a course:</label>
+<select id="course" name="course">
+  <option value="html">HTML</option>
+  <option value="css">CSS</option>
+  <option value="python">Python</option>
+</select>`,
+tip:"Use selected on an option if you want to choose an initial value."
+},
+{
+title:"HTML Textarea",
+definition:"The textarea element creates a control for entering multiple lines of text.",
+explanation:"Rows and cols can suggest the initial size, while CSS can control the displayed dimensions. Unlike input type=text, textarea is designed for longer text.",
+code:`<label for="message">Your message:</label>
+<textarea id="message" name="message"
+          rows="4"
+          placeholder="Write here"></textarea>`,
+tip:"Connect each label to its field using matching for and id values."
+},
+{
+title:"HTML Fieldset and Legend",
+definition:"The fieldset element groups related form controls, and the legend element provides a caption for the group.",
+explanation:"Grouping related fields makes longer forms easier to understand. A fieldset is particularly useful for related options or sections of user information.",
+code:`<fieldset>
+  <legend>Personal Details</legend>
+  <label for="person-name">Name:</label>
+  <input id="person-name" name="name" type="text">
+</fieldset>`,
+tip:"Use fieldset when a group of controls shares a common purpose."
+},
+{
+title:"HTML Radio Buttons",
+definition:"Radio buttons let users select one option from a group of mutually exclusive choices.",
+explanation:"Radio inputs belong to the same group when they share the same name. Give each option its own value and connect its label to its input.",
+code:`<input type="radio" id="male"
+       name="gender" value="male">
+<label for="male">Male</label>
+
+<input type="radio" id="female"
+       name="gender" value="female">
+<label for="female">Female</label>`,
+tip:"Use radio buttons when the user should select only one option from a group."
+},
+{
+title:"HTML Checkboxes",
+definition:"Checkboxes let users select one or more independent options.",
+explanation:"Each checkbox can be checked or unchecked separately. Use clear labels so users understand what each option means.",
+code:`<input type="checkbox" id="html-check"
+       name="course" value="html">
+<label for="html-check">HTML</label>
+
+<input type="checkbox" id="css-check"
+       name="course" value="css">
+<label for="css-check">CSS</label>`,
+tip:"Checkboxes are suitable for selecting several interests or preferences."
+},
+{
+title:"HTML Input Attributes",
+definition:"Input attributes configure how a form field behaves and what values it accepts.",
+explanation:"The placeholder attribute provides a hint. Required makes a field mandatory, while min, max and maxlength can constrain values or text length where applicable.",
+code:`<input type="text"
+       placeholder="Your name"
+       maxlength="30"
+       required>
+
+<input type="number" min="1" max="100">`,
+tip:"A placeholder is not a replacement for a visible label."
+},
+{
+title:"HTML Form Validation",
+definition:"HTML form validation lets the browser check certain field requirements before a form is submitted.",
+explanation:"Attributes such as required, type=email, min, max and minlength can help catch common input mistakes. Client-side validation improves usability but can be bypassed, so servers must validate submitted data too.",
+code:`<form>
+  <label for="email">Email:</label>
+  <input id="email" type="email" required>
+  <button type="submit">Submit</button>
+</form>`,
+tip:"Try submitting the form without entering an email address."
+},
+{
+title:"Email and Phone Links",
+definition:"The mailto and tel URL schemes create links that can open an email or phone application.",
+explanation:"A mailto link can start a new email message. A tel link can let a compatible device open a calling app. Actual behaviour depends on the device and installed applications.",
+code:`<a href="mailto:hello@example.com">
+  Send Email
+</a>
+
+<a href="tel:+911234567890">
+  Call Us
+</a>`,
+tip:"Replace the sample email and phone number with appropriate contact details."
+},
+{
+title:"Opening Links in a New Tab",
+definition:"The target attribute specifies the browsing context in which a link should open.",
+explanation:"The value _blank requests a new tab or window. Adding rel=noopener prevents the opened page from accessing the opener window through the opener property.",
+code:`<a href="https://example.com"
+   target="_blank"
+   rel="noopener">
+  Open Example
+</a>`,
+tip:"Use new tabs only when they help the visitor's task."
+},
+{
+title:"Responsive HTML",
+definition:"Responsive webpages adapt their layout and content to different screen sizes and devices.",
+explanation:"HTML supplies the structure, while CSS usually handles responsive layout. The viewport meta tag helps mobile browsers use the device's actual screen width.",
+code:`<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<main>
+  <h1>Responsive Page</h1>
+  <p>This content can adapt using CSS.</p>
+</main>`,
+tip:"Test your page on a narrow screen as well as a laptop."
+},
+{
+title:"HTML Accessibility",
+definition:"HTML accessibility means structuring content so people with different abilities can use and understand it.",
+explanation:"Useful practices include meaningful headings, descriptive links, text alternatives for informative images and properly associated form labels. Native HTML controls are generally a good starting point.",
+code:`<img src="cat.jpg" alt="A cat sleeping">
+
+<label for="username">Your name</label>
+<input id="username" name="username" type="text">
+
+<button type="button">Continue</button>`,
+tip:"Do not use alt text to repeat information that is already clear from nearby text."
+},
+{
+title:"HTML Data Attributes",
+definition:"Data attributes store custom information on an HTML element using attribute names that begin with data-.",
+explanation:"For example, data-level can store a level label on a lesson card. JavaScript can read these attributes when needed, but they should not be used to store confidential information.",
+code:`<p data-level="beginner">
+  HTML Lesson
+</p>
+
+<div data-course="html">
+  Start learning
+</div>`,
+tip:"Custom data attributes are useful for small pieces of element-specific information."
+},
+{
+title:"HTML Picture Element",
+definition:"The picture element lets a browser choose among different image sources.",
+explanation:"The source elements can provide alternatives for different screen conditions or formats. An img element inside picture supplies the image and its alternative text.",
+code:`<picture>
+  <source media="(min-width: 800px)"
+          srcset="large.jpg">
+  <img src="small.jpg"
+       alt="A green landscape">
+</picture>`,
+tip:"Make sure the fallback image is available and has suitable alt text."
+},
+{
+title:"HTML SVG Graphics",
+definition:"SVG stands for Scalable Vector Graphics and is a format for drawing shapes and graphics.",
+explanation:"SVG shapes are described using markup and can scale without the pixelation associated with enlarging a small raster image. SVG can be embedded directly into HTML.",
+code:`<svg width="140" height="90"
+     viewBox="0 0 140 90"
+     role="img" aria-label="Blue circle">
+  <circle cx="45" cy="45" r="30"
+          fill="blue"></circle>
+</svg>`,
+tip:"Provide an accessible name for meaningful inline graphics."
+},
+{
+title:"HTML Canvas",
+definition:"The canvas element provides a drawable area that JavaScript can use to create graphics.",
+explanation:"The canvas element defines a drawing surface with width and height attributes. JavaScript can access its drawing context to draw shapes, charts or simple game graphics.",
+code:`<canvas id="myCanvas"
+        width="240" height="100">
+  Your browser does not support canvas.
+</canvas>`,
+tip:"This example creates the canvas area; JavaScript is needed to draw on it."
+},
+{
+title:"HTML Metadata",
+definition:"Metadata is information about a webpage, such as its description, author or character encoding.",
+explanation:"Metadata is commonly placed inside the head element. A description may be used in search result snippets, although search engines decide what to display.",
+code:`<meta charset="UTF-8">
+<meta name="description"
+      content="Easy HTML lessons for beginners">
+<meta name="author" content="CodeSeekho">
+<title>HTML Tutorial</title>`,
+tip:"Metadata describes the page; it is not normally displayed as body text."
+},
+{
+title:"HTML Language Attribute",
+definition:"The lang attribute declares the language of the content in an HTML element.",
+explanation:"Setting the page language helps assistive technology and other tools interpret the text. A different language can also be declared on a particular section when needed.",
+code:`<html lang="en">
+<body>
+  <p>Hello, welcome!</p>
+  <p lang="hi">नमस्ते, स्वागत है!</p>
+</body>
+</html>`,
+tip:"Use the appropriate language code for the main page content."
+},
+{
+title:"Common HTML Mistakes",
+definition:"Common HTML mistakes include missing closing tags, incorrectly nested elements, misspelled attributes and incorrect file paths.",
+explanation:"Browsers often try to recover from invalid markup, which can hide problems. Validate your structure, check the browser output and verify that linked files exist.",
+code:`<!-- Correct paragraph -->
+<p>Hello World</p>
+
+<!-- Correct nesting -->
+<strong><em>Important text</em></strong>
+
+<!-- Correct image attribute -->
+<img src="cat.jpg" alt="A cat">`,
+tip:"Check opening and closing tags carefully when a page does not look as expected."
+},
+{
+title:"Final Project: Personal Webpage",
+definition:"A personal webpage combines HTML elements to present information about a person in a clear, organized way.",
+explanation:"Build a page with a title, introduction, hobbies, goals, an image and a contact link. Replace sample content with your own appropriate content and test all file paths.",
+code:`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <title>My Profile</title>
+</head>
+<body>
+  <header>
+    <h1>My Profile</h1>
+  </header>
+  <main>
+    <p>Hello! I am learning HTML.</p>
+    <h2>My Hobbies</h2>
+    <ul>
+      <li>Reading</li>
+      <li>Coding</li>
+    </ul>
+    <a href="mailto:hello@example.com">Contact Me</a>
+  </main>
+  <footer>Made by me</footer>
+</body>
+</html>`,
+tip:"Before finishing, check the heading structure, links, image alt text and mobile layout."
+}
+];
+
+let currentLesson = 0;
+
+const lessonLinks = document.getElementById("lessonLinks");
+
+function escapeHTML(value) {
+  return value.replace(/[&<>"']/g, function(character) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[character];
+  });
+}
+
+function buildSidebar() {
+  lessonLinks.innerHTML = lessons.map(function(lesson, index) {
+    return '<a href="#lessons" data-lesson="' + index + '">' +
+      (index + 1) + '. ' + escapeHTML(lesson.title) +
+      '</a>';
+  }).join("");
+
+  lessonLinks.querySelectorAll("a").forEach(function(link) {
+    link.addEventListener("click", function() {
+      showLesson(Number(link.dataset.lesson));
+    });
+  });
+}
+
+function showLesson(index, shouldScroll = true) {
+  currentLesson = Math.max(0, Math.min(index, lessons.length - 1));
+  const lesson = lessons[currentLesson];
+
+  document.getElementById("lessonTitle").textContent =
+    (currentLesson + 1) + ". " + lesson.title;
+
+  document.getElementById("lessonDefinition").textContent =
+    lesson.definition;
+
+  document.getElementById("lessonExplanation").textContent =
+    lesson.explanation;
+
+  document.getElementById("lessonCode").textContent =
+    lesson.code;
+
+  document.getElementById("lessonTip").textContent =
+    "Tip: " + lesson.tip;
+
+  const percent = Math.round(((currentLesson + 1) / lessons.length) * 100);
+
+  document.getElementById("lessonProgress").textContent =
+    "Lesson " + (currentLesson + 1) + " of " + lessons.length;
+
+  document.getElementById("progressPercent").textContent =
+    percent + "% complete";
+
+  document.getElementById("progressFill").style.width = percent + "%";
+
+  document.getElementById("progressBar").setAttribute("aria-valuenow", percent);
+
+  document.getElementById("backButton").disabled = currentLesson === 0;
+  document.getElementById("nextButton").disabled =
+    currentLesson === lessons.length - 1;
+
+  lessonLinks.querySelectorAll("a").forEach(function(link) {
+    const active = Number(link.dataset.lesson) === currentLesson;
+    link.classList.toggle("active", active);
+
+    if (active) {
+      link.setAttribute("aria-current", "step");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+
+  if (shouldScroll) {
+    document.getElementById("lessons").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+}
+
+function previousLesson() {
+  if (currentLesson > 0) {
+    showLesson(currentLesson - 1);
+  }
+}
+
+function nextLesson() {
+  if (currentLesson < lessons.length - 1) {
+    showLesson(currentLesson + 1);
+  }
+}
+
+function runCode() {
+  const code = document.getElementById("editor").value;
+  document.getElementById("preview").srcdoc = code;
+}
+
+document.addEventListener("keydown", function(event) {
+  if (event.altKey && event.key === "ArrowLeft") {
+    previousLesson();
+  } else if (event.altKey && event.key === "ArrowRight") {
+    nextLesson();
+  }
+});
+
+buildSidebar();
+showLesson(0, false);
+runCode();
+</script>
+</body>
+</html>
